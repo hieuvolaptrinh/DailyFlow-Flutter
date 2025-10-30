@@ -1,5 +1,6 @@
+import 'package:dailyflow/ui/onboarding/onboarding_page_view.dart';
 import 'package:flutter/material.dart';
-import 'package:manage_tasks/ui/splash/splash.dart';
+import 'package:dailyflow/ui/splash/splash.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,7 +9,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: SafeArea(child: SplashScreen()),
+      home: SafeArea(child: OnboardingPageView()),
     );
   }
 }

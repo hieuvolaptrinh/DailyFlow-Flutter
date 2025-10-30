@@ -1,4 +1,4 @@
-name: manage_tasks
+name: dailyflow
 description: "A new Flutter project."
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -32,8 +32,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/checkIcon.png
-    - assets/images/2.0x/checkIcon2x.png
-    - assets/images/3.0x/checkIcon3x.png
+    - assets/images/2.0x/checkIcon@2x.png
+    - assets/images/3.0x/checkIcon@3x.png
+    - assets/images/onboarding1.png
+    - assets/images/onboarding2.png
+    - assets/images/onboarding3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

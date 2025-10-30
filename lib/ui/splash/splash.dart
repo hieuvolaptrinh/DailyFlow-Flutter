@@ -7,22 +7,40 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
-      body: Container(
-        color: Colors.green,
+      body: _buildBodyLogo(),
+    );
+  }
+
+  Widget _buildBodyLogo() {
+    return Center(
+      child: Container(
         child: Column(
-          mainAxisSize: MainAxisSize.min, // co lại theo nội dung
-          children: [
-            Image.asset(
-              "assets/images/checkIcon.png",
-              width: 95,
-              height: 95,
-              fit: BoxFit.contain,
-            ),
-            const Text(
-              "oke test",
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
-          ],
+          mainAxisSize:
+              MainAxisSize.min, // co lại theo nội dung giống display flex
+          children: [_buildIconSplash(), _buildTextSplash()],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIconSplash() {
+    return Image.asset(
+      "assets/images/checkIcon.png",
+      width: 95,
+      height: 95,
+      fit: BoxFit.contain,
+    );
+  }
+
+  Widget _buildTextSplash() {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      child: const Text(
+        "Up todo",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 45,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
