@@ -3,8 +3,19 @@ import 'package:flutter/material.dart';
 
 class OnboardingChildPage extends StatelessWidget {
   final OnboardingPagePosition onboardingPagePosition;
-  const OnboardingChildPage({super.key, required this.onboardingPagePosition});
 
+  final VoidCallback nextOnPressed;
+  final VoidCallback backOnPressed; // có thể truyền hoạt không
+
+  final VoidCallback skipOnPressed;
+
+  const OnboardingChildPage({
+    super.key,
+    required this.onboardingPagePosition,
+    required this.nextOnPressed,
+    required this.backOnPressed,
+    required this.skipOnPressed,
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +41,9 @@ class OnboardingChildPage extends StatelessWidget {
       margin: const EdgeInsets.only(top: 14),
       alignment: AlignmentDirectional.centerStart,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          skipOnPressed.call();
+        },
         child: const Text(
           "Skip",
           style: TextStyle(
@@ -45,7 +58,8 @@ class OnboardingChildPage extends StatelessWidget {
 
   Widget _buildOnboardingImage() {
     return Image.asset(
-      OnboardingPageTitle(this.onboardingPagePosition),
+      onboardingPagePosition.onboardingPageImage(),
+
       height: 300,
       width: 300,
       fit: BoxFit.contain,
@@ -61,18 +75,30 @@ class OnboardingChildPage extends StatelessWidget {
           Container(
             height: 4,
             width: 26,
-            decoration: BoxDecoration(color: Colors.white70),
+            decoration: BoxDecoration(
+              color: OnboardingPagePosition.page1 == this.onboardingPagePosition
+                  ? Colors.white
+                  : Colors.white54,
+            ),
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 8),
             height: 4,
             width: 26,
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: BoxDecoration(
+              color: OnboardingPagePosition.page2 == this.onboardingPagePosition
+                  ? Colors.white
+                  : Colors.white54,
+            ),
           ),
           Container(
             height: 4,
             width: 26,
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: BoxDecoration(
+              color: OnboardingPagePosition.page3 == this.onboardingPagePosition
+                  ? Colors.white
+                  : Colors.white54,
+            ),
           ),
         ],
       ),
@@ -116,7 +142,9 @@ class OnboardingChildPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween, // căn 2 nút 2 bên
         children: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              backOnPressed.call();
+            },
             child: const Text(
               "Back",
               style: TextStyle(
@@ -128,7 +156,9 @@ class OnboardingChildPage extends StatelessWidget {
           ),
           const Spacer(),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              nextOnPressed.call();
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF8875FF),
               shape: RoundedRectangleBorder(
@@ -136,8 +166,10 @@ class OnboardingChildPage extends StatelessWidget {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
-            child: const Text(
-              "Next",
+            child: Text(
+              this.onboardingPagePosition == OnboardingPagePosition.page3
+                  ? "Get Started"
+                  : "Next",
               style: TextStyle(
                 fontFamily: "Lato",
                 fontSize: 16,

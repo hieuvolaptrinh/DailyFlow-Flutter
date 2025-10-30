@@ -1,8 +1,7 @@
 enum OnboardingPagePosition { page1, page2, page3 }
 
 // extension để customize kiểu dữ liệu
-extension OnboardingPagePostionExtension on OnboardingPagePosition {
-  // trả về image cho 3 page
+extension OnboardingPagePositionExtension on OnboardingPagePosition {
   String onboardingPageImage() {
     switch (this) {
       case OnboardingPagePosition.page1:
