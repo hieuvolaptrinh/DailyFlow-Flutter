@@ -18,19 +18,21 @@ class OnboardingChildPage extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1E1E1E),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildSkipButton(),
-            _buildOnboardingImage(),
-            _buildOnboardingPageControl(),
-            _buildOnboardingTitleAndContent(),
-            _buildOnboardingNextAndPreButton(),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xFF1E1E1E),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildSkipButton(),
+              _buildOnboardingImage(),
+              _buildOnboardingPageControl(),
+              _buildOnboardingTitleAndContent(),
+              _buildOnboardingNextAndPreButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -137,7 +139,8 @@ class OnboardingChildPage extends StatelessWidget {
 
   Widget _buildOnboardingNextAndPreButton() {
     return Container(
-      margin: EdgeInsets.only(top: 80, left: 24, right: 24),
+      alignment: Alignment.bottomCenter,
+      margin: EdgeInsets.only(bottom: 20, left: 24, right: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween, // căn 2 nút 2 bên
         children: [

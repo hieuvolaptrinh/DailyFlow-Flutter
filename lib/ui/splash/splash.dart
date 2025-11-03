@@ -1,13 +1,53 @@
+import 'package:dailyflow/ui/onboarding/onboarding_page_view.dart';
+import 'package:dailyflow/ui/welcome/welcome_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
+  Future<void> _checkAppState(BuildContext context) async {
+    final isCompleted = await _isOnboardingCompleted();
+    if (isCompleted) {
+      // di chuyển đến màn hình welcom
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return WelcomePage();
+          },
+        ),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return OnboardingPageView();
+          },
+        ),
+      );
+    }
+  }
+
+  Future<bool> _isOnboardingCompleted() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final result = prefs.getBool("kOnboardingCompleted") ?? false;
+      return result;
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF121212),
-      body: _buildBodyLogo(),
+    _checkAppState(context);
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xFF121212),
+        body: _buildBodyLogo(),
+      ),
     );
   }
 

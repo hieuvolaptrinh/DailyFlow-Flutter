@@ -1,5 +1,6 @@
 import 'package:dailyflow/ui/main/main_page.dart';
 import 'package:dailyflow/ui/onboarding/onboarding_page_view.dart';
+import 'package:dailyflow/ui/welcome/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dailyflow/ui/splash/splash.dart';
 
@@ -20,8 +21,9 @@ class MyApp extends StatelessWidget {
         ),
         fontFamily: "Lato",
       ),
-      // home: SafeArea(child: OnboardingPageView()),
-      home: SafeArea(child: MainPage()),
+      home: SafeArea(child: SplashScreen()),
+      // home: SafeArea(child: MainPage()),
+      // home: SafeArea(child: WelcomePage()),
     );
   }
 }
