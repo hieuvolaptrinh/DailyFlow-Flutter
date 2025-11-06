@@ -1,9 +1,11 @@
+import 'package:dailyflow/ui/category/create_edit_category.dart';
 import 'package:dailyflow/ui/main/main_page.dart';
 import 'package:dailyflow/ui/onboarding/onboarding_page_view.dart';
 import 'package:dailyflow/ui/welcome/welcome_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:dailyflow/ui/splash/splash.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,11 +34,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 88, 93, 240),
         ),
-        fontFamily: "Lato",
+        // fontFamily: GoogleFonts.lato().fontFamily,
+        textTheme: GoogleFonts.latoTextTheme(),
       ),
-      home: SafeArea(child: WelcomePage(isFirstTimeInstallApp: true)),
+      // home: SafeArea(child: WelcomePage(isFirstTimeInstallApp: true)),
       // home: SafeArea(child: MainPage()),
-   
+      home: SafeArea(child: CreateOrEditCategory()),
       // language
       localizationsDelegates: context.localizationDelegates,
       locale: context.locale,

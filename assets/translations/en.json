@@ -1,4 +1,5 @@
 {
+  "common_cancel": "Cancel",
   "welcome_page": {
     "title": "Welcome to DailyFlow :>",
     "desc": "Please login to your account \nor create a new account to continue",
