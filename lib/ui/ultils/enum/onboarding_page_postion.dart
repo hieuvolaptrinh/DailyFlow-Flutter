@@ -17,21 +17,21 @@ extension OnboardingPagePositionExtension on OnboardingPagePosition {
 String OnboardingPageTitle(OnboardingPagePosition position) {
   switch (position) {
     case OnboardingPagePosition.page1:
-      return 'Manage your tasks';
+      return 'onboarding.page1.title';
     case OnboardingPagePosition.page2:
-      return 'Create daily routine';
+      return 'onboarding.page2.title';
     case OnboardingPagePosition.page3:
-      return 'Organize your tasks';
+      return 'onboarding.page3.title';
   }
 }
 
 String OnboardingPageContent(OnboardingPagePosition position) {
   switch (position) {
     case OnboardingPagePosition.page1:
-      return 'You can easily manage all of your daily tasks in your DaylyFlow app.';
+      return 'onboarding.page1.content';
     case OnboardingPagePosition.page2:
-      return 'In Uptodo you can create your personalized routine to stay productive';
+      return 'onboarding.page2.content';
     case OnboardingPagePosition.page3:
-      return 'You can organize your daily tasks by adding your tasks into separate categories';
+      return 'onboarding.page3.content';
   }
 }

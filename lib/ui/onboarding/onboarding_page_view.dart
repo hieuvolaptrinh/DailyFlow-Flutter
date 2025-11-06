@@ -69,7 +69,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return WelcomePage();
+          return WelcomePage(isFirstTimeInstallApp: true);
         },
       ),
     );

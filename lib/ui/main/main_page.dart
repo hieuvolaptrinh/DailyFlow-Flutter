@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -58,7 +59,7 @@ class _MainPageState extends State<MainPage> {
               fit: BoxFit.fill,
               color: const Color(0XFF8687E7),
             ),
-            label: "Index",
+            label: context.tr('main_page.home'),
           ),
 
           BottomNavigationBarItem(
@@ -76,7 +77,7 @@ class _MainPageState extends State<MainPage> {
               fit: BoxFit.fill,
               color: const Color(0XFF8687E7),
             ),
-            label: "Calendar",
+            label: context.tr('main_page.calendar'),
           ),
           BottomNavigationBarItem(icon: Container(), label: ""),
           BottomNavigationBarItem(
@@ -93,7 +94,7 @@ class _MainPageState extends State<MainPage> {
               fit: BoxFit.fill,
               color: const Color(0XFF8687E7),
             ),
-            label: "Focus",
+            label: context.tr('main_page.focus'),
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
@@ -109,7 +110,7 @@ class _MainPageState extends State<MainPage> {
               fit: BoxFit.fill,
               color: const Color(0XFF8687E7),
             ),
-            label: "Profile",
+            label: context.tr('main_page.profile'),
           ),
         ],
       ),

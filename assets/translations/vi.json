@@ -1,0 +1,62 @@
+{
+  "welcome_page": {
+    "title": "Chào mừng đến với DailyFlow",
+    "desc": "Vui lòng đăng nhập vào tài khoản của bạn \nhoặc tạo một tài khoản mới để tiếp tục",
+    "login": "ĐĂNG NHẬP",
+    "create_account": "TẠO TÀI KHOẢN",
+    "change_language": "Đổi Ngôn Ngữ"
+  },
+  "login_page": {
+    "title": "Đăng Nhập",
+    "username": "Tên Đăng Nhập",
+    "username_hint": "Nhập tên đăng nhập của bạn",
+    "password": "Mật Khẩu",
+    "password_hint": "Nhập mật khẩu của bạn",
+    "login_button": "Đăng Nhập",
+    "or": "hoặc",
+    "login_google": "Đăng Nhập bằng Google",
+    "login_apple": "Đăng Nhập bằng Apple",
+    "register_link": "Chưa có tài khoản? Đăng Ký"
+  },
+  "register_page": {
+    "title": "Đăng Ký",
+    "username": "Tên Đăng Nhập",
+    "username_hint": "Nhập tên đăng nhập của bạn",
+    "password": "Mật Khẩu",
+    "password_hint": "Nhập mật khẩu của bạn",
+    "confirm_password": "Xác Nhận Mật Khẩu",
+    "confirm_password_hint": "Xác nhận mật khẩu của bạn",
+    "register_button": "Đăng Ký",
+    "or": "hoặc",
+    "register_google": "Đăng Ký bằng Google",
+    "register_apple": "Đăng Ký bằng Apple",
+    "login_link": "Đã có tài khoản? Đăng Nhập"
+  },
+  "onboarding": {
+    "skip": "Bỏ Qua",
+    "back": "Quay Lại",
+    "next": "Tiếp Theo",
+    "get_started": "Bắt Đầu",
+    "page1": {
+      "title": "Giữ Tổ Chức",
+      "content": "Lưu giữ tất cả công việc và ghi chú của bạn ở một nơi. Không bao giờ quên các hạn chót quan trọng."
+    },
+    "page2": {
+      "title": "Theo Dõi Tiến Độ",
+      "content": "Giám sát tiến độ hàng ngày của bạn và ăn mừng thành tích. Xây dựng thói quen tốt hơn."
+    },
+    "page3": {
+      "title": "Thời Gian Tập Trung",
+      "content": "Sử dụng bộ hẹn giờ Pomodoro để tập trung và năng suất. Tối đa hóa thời gian của bạn."
+    }
+  },
+  "main_page": {
+    "home": "Trang Chủ",
+    "calendar": "Lịch",
+    "focus": "Tập Trung",
+    "profile": "Hồ Sơ"
+  },
+  "splash": {
+    "app_name": "DailyFlow"
+  }
+}

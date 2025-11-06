@@ -1,5 +1,6 @@
 import 'package:dailyflow/ui/ultils/enum/onboarding_page_postion.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class OnboardingChildPage extends StatelessWidget {
   final OnboardingPagePosition onboardingPagePosition;
@@ -26,11 +27,11 @@ class OnboardingChildPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildSkipButton(),
+              _buildSkipButton(context),
               _buildOnboardingImage(),
               _buildOnboardingPageControl(),
-              _buildOnboardingTitleAndContent(),
-              _buildOnboardingNextAndPreButton(),
+              _buildOnboardingTitleAndContent(context),
+              _buildOnboardingNextAndPreButton(context),
             ],
           ),
         ),
@@ -38,7 +39,7 @@ class OnboardingChildPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSkipButton() {
+  Widget _buildSkipButton(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 14),
       alignment: AlignmentDirectional.centerStart,
@@ -46,9 +47,9 @@ class OnboardingChildPage extends StatelessWidget {
         onPressed: () {
           skipOnPressed.call();
         },
-        child: const Text(
-          "Skip",
-          style: TextStyle(
+        child: Text(
+          context.tr('onboarding.skip'),
+          style: const TextStyle(
             fontSize: 16,
             fontFamily: "Lato",
             color: Colors.white70,
@@ -107,13 +108,13 @@ class OnboardingChildPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOnboardingTitleAndContent() {
+  Widget _buildOnboardingTitleAndContent(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 38, vertical: 70),
       child: Column(
         children: [
           Text(
-            OnboardingPageTitle(this.onboardingPagePosition),
+            context.tr(OnboardingPageTitle(this.onboardingPagePosition)),
             style: TextStyle(
               fontFamily: "Lato",
               color: Colors.white,
@@ -123,7 +124,7 @@ class OnboardingChildPage extends StatelessWidget {
           ),
           SizedBox(height: 42),
           Text(
-            OnboardingPageContent(this.onboardingPagePosition),
+            context.tr(OnboardingPageContent(this.onboardingPagePosition)),
             style: TextStyle(
               fontFamily: "Lato",
               color: Colors.white,
@@ -137,7 +138,7 @@ class OnboardingChildPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOnboardingNextAndPreButton() {
+  Widget _buildOnboardingNextAndPreButton(BuildContext context) {
     return Container(
       alignment: Alignment.bottomCenter,
       margin: EdgeInsets.only(bottom: 20, left: 24, right: 24),
@@ -148,8 +149,8 @@ class OnboardingChildPage extends StatelessWidget {
             onPressed: () {
               backOnPressed.call();
             },
-            child: const Text(
-              "Back",
+            child: Text(
+              context.tr('onboarding.back'),
               style: TextStyle(
                 fontFamily: "Lato",
                 fontSize: 16,
@@ -171,8 +172,8 @@ class OnboardingChildPage extends StatelessWidget {
             ),
             child: Text(
               this.onboardingPagePosition == OnboardingPagePosition.page3
-                  ? "Get Started"
-                  : "Next",
+                  ? context.tr('onboarding.get_started')
+                  : context.tr('onboarding.next'),
               style: TextStyle(
                 fontFamily: "Lato",
                 fontSize: 16,

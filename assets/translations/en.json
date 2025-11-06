@@ -1,0 +1,62 @@
+{
+  "welcome_page": {
+    "title": "Welcome to DailyFlow :>",
+    "desc": "Please login to your account \nor create a new account to continue",
+    "login": "LOGIN",
+    "create_account": "CREATE ACCOUNT",
+    "change_language": "Change Language"
+  },
+  "login_page": {
+    "title": "Login",
+    "username": "Username",
+    "username_hint": "Enter your Username",
+    "password": "Password",
+    "password_hint": "Enter your Password",
+    "login_button": "Login",
+    "or": "or",
+    "login_google": "Login with Google",
+    "login_apple": "Login with Apple",
+    "register_link": "Don't have an account? Register"
+  },
+  "register_page": {
+    "title": "Register",
+    "username": "Username",
+    "username_hint": "Enter your Username",
+    "password": "Password",
+    "password_hint": "Enter your Password",
+    "confirm_password": "Confirm Password",
+    "confirm_password_hint": "Confirm your Password",
+    "register_button": "Register",
+    "or": "or",
+    "register_google": "Register with Google",
+    "register_apple": "Register with Apple",
+    "login_link": "Already have an account? Login"
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "back": "Back",
+    "next": "Next",
+    "get_started": "Get Started",
+    "page1": {
+      "title": "Stay Organized",
+      "content": "Keep all your tasks and notes in one place. Never forget important deadlines again."
+    },
+    "page2": {
+      "title": "Track Progress",
+      "content": "Monitor your daily progress and celebrate your achievements. Build better habits."
+    },
+    "page3": {
+      "title": "Focus Time",
+      "content": "Use our Pomodoro timer to stay focused and productive. Maximize your time."
+    }
+  },
+  "main_page": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "focus": "Focus",
+    "profile": "Profile"
+  },
+  "splash": {
+    "app_name": "DailyFlow"
+  }
+}

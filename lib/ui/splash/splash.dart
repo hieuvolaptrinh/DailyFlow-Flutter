@@ -2,6 +2,7 @@ import 'package:dailyflow/ui/onboarding/onboarding_page_view.dart';
 import 'package:dailyflow/ui/welcome/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -14,7 +15,7 @@ class SplashScreen extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return WelcomePage();
+            return WelcomePage(isFirstTimeInstallApp: false);
           },
         ),
       );
@@ -46,18 +47,18 @@ class SplashScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFF121212),
-        body: _buildBodyLogo(),
+        body: _buildBodyLogo(context),
       ),
     );
   }
 
-  Widget _buildBodyLogo() {
+  Widget _buildBodyLogo(BuildContext context) {
     return Center(
       child: Container(
         child: Column(
           mainAxisSize:
               MainAxisSize.min, // co lại theo nội dung giống display flex
-          children: [_buildIconSplash(), _buildTextSplash()],
+          children: [_buildIconSplash(), _buildTextSplash(context)],
         ),
       ),
     );
@@ -72,12 +73,12 @@ class SplashScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextSplash() {
+  Widget _buildTextSplash(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      child: const Text(
-        "Up todo",
-        style: TextStyle(
+      child: Text(
+        context.tr('splash.app_name'),
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 45,
           fontWeight: FontWeight.bold,
