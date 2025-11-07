@@ -57,6 +57,14 @@
     "focus": "Focus",
     "profile": "Profile"
   },
+  "category_page": {
+    "create_category": "Create Category",
+    "edit_category": "Edit Category",
+    "category_name": "Category Name",
+    "category_name_hint": "Enter category name",
+    "save_button": "Save",
+    "delete_button": "Delete"
+  },
   "splash": {
     "app_name": "DailyFlow"
   }

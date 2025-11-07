@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CreateOrEditCategory extends StatefulWidget {
@@ -8,7 +9,8 @@ class CreateOrEditCategory extends StatefulWidget {
 }
 
 class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
-  final _nameCategoryTextController = TextEditingController();
+  final _nameCategoryTextController =
+      TextEditingController(); // để quản lý các text field
   List<Color> _colorDataSource = [];
   Color? colorSelected = null;
 
@@ -66,6 +68,8 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
           _buildCategoryNameField(),
           _buildCategoryChooseIconField(),
           _buildCategoryChooseBackgroundColorField(),
+          Spacer(),
+          _buildCreateAndCancelButtons(context),
         ],
       ),
     );
@@ -168,11 +172,7 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
                     print(" chooses color $index");
                     // set state để build lại giao diện khi thay đổi nhé
                     setState(() {
-                      print("colorSelected $colorSelected");
-                      print("color $color");
                       colorSelected = color;
-                      print("colorSelected $colorSelected");
-                      print("color $color");
                     });
                   },
                   child: Container(
@@ -212,5 +212,54 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
         color: Colors.white,
       ),
     );
+  }
+
+  Widget _buildCreateAndCancelButtons(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround, // căn 2 nút 2 bên
+        children: [
+          TextButton(
+            onPressed: () {},
+            child: Text(
+              context.tr('common_cancel'),
+              style: TextStyle(
+                fontFamily: "Lato",
+                fontSize: 26,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          const Spacer(), // hoặc xài thằng Expanded để bọc lại các phần trong row hoặc column để chiếm hết khoản trống còn lại trong khung nhìn
+          ElevatedButton(
+            onPressed: () {
+              _handleCreateCategory();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF8875FF),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: Text(
+              "Create Category",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // sự kiện, vứt ra ngoài cho dễ nhìn
+  void _handleCreateCategory() {
+    final categoryName = _nameCategoryTextController.text;
+    print("Create Category: $categoryName");
   }
 }
