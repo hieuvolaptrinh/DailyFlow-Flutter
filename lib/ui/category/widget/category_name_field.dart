@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// Widget để nhập tên category
-/// Tách ra từ CreateOrEditCategory để dễ bảo trì và tái sử dụng
+/// Widget để nhập tên danh mục
+/// - Hiển thị tiêu đề "Category Name"
+/// - TextFormField nhập tên
 class CategoryNameField extends StatelessWidget {
   final TextEditingController controller;
 
-  const CategoryNameField({
-    super.key,
-    required this.controller,
-  });
+  const CategoryNameField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -18,18 +16,20 @@ class CategoryNameField extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Tiêu đề field
           _buildFieldTitle("Category Name"),
+          // TextFormField nhập tên
           Container(
             margin: const EdgeInsets.only(top: 8, bottom: 16),
             child: TextFormField(
               controller: controller,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w400,
-                color: Color.fromARGB(136, 255, 255, 255),
+                color: const Color.fromARGB(136, 255, 255, 255),
               ),
               decoration: InputDecoration(
                 hintText: "Category Name",
-                hintStyle: const TextStyle(
+                hintStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   color: Colors.white54,
                 ),
@@ -48,11 +48,11 @@ class CategoryNameField extends StatelessWidget {
     );
   }
 
-  /// Widget chung để hiển thị tiêu đề của các field
+  /// Build tiêu đề field với styling
   Widget _buildFieldTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Colors.white,

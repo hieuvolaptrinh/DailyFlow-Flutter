@@ -1,7 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'widget/category_name_field.dart';
+import 'widget/category_icon_field.dart';
+import 'widget/category_background_color_field.dart';
+import 'widget/category_icon_color_field.dart';
+import 'widget/category_action_buttons.dart';
 
 class CreateOrEditCategoryPage extends StatefulWidget {
   const CreateOrEditCategoryPage({super.key});
@@ -13,7 +17,6 @@ class CreateOrEditCategoryPage extends StatefulWidget {
 
 class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   final _nameCategoryTextController = TextEditingController(); // để quản lý
-  List<Color> _colorDataSource = [];
   Color _colorSelected = Colors.white;
 
   IconData? _iconSlected;
@@ -28,19 +31,6 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   @override
   void initState() {
     super.initState();
-
-    _colorDataSource = [
-      Colors.red,
-      Colors.green,
-      Colors.blue,
-      Colors.yellow,
-      Colors.orange,
-      Colors.purple,
-      Colors.pink,
-      Colors.brown,
-      Colors.deepOrangeAccent,
-      const Color.fromARGB(255, 255, 247, 0),
-    ];
   }
 
   @override
@@ -63,6 +53,14 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
     );
   }
 
+  /// Build body chính của trang
+  /// Cấu trúc:
+  /// - CategoryNameField: Widget con để nhập tên category
+  /// - CategoryIconField: Widget con để chọn icon
+  /// - CategoryBackgroundColorField: Widget con để chọn màu nền
+  /// - CategoryIconColorField: Widget con để chọn màu icon
+  /// - Spacer: Khoảng cách tự động
+  /// - CategoryActionButtons: Widget con cho 2 nút hành động
   Widget _buildBodyPageScreen() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -70,197 +68,27 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildCategoryNameField(),
-          _buildCategoryChooseIconField(),
-          _buildCategoryChooseBackgroundColorField(),
-          _buildCategoryChooseIconAndTextColorField(),
+          // Widget con 1: Nhập tên category
+          CategoryNameField(controller: _nameCategoryTextController),
+          // Widget con 2: Chọn icon
+          CategoryIconField(selectedIcon: _iconSlected, onTap: _chooseIcon),
+          // Widget con 3: Chọn màu nền category
+          CategoryBackgroundColorField(
+            selectedColor: _colorSelected,
+            onTap: _onChooseCategoryBackgroundColor,
+          ),
+          // Widget con 4: Chọn màu icon và text
+          CategoryIconColorField(
+            selectedColor: _iconColorSelected,
+            onTap: _onChooseCategoryIconColor,
+          ),
           Spacer(),
-          _buildCreateAndCancelButtons(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryNameField() {
-    return Container(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildFieldTitle("Category Name"),
-          Container(
-            margin: const EdgeInsets.only(top: 8, bottom: 16),
-            child: TextFormField(
-              controller: _nameCategoryTextController,
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                color: const Color.fromARGB(136, 255, 255, 255),
-              ),
-              decoration: InputDecoration(
-                hintText: "Category Name",
-                hintStyle: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white54,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4),
-                  borderSide: const BorderSide(
-                    width: 2,
-                    color: Color(0xFF979797),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryChooseIconField() {
-    return Container(
-      padding: const EdgeInsets.only(top: 10),
-      margin: EdgeInsets.only(top: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildFieldTitle("Choose Icon "),
-          GestureDetector(
-            onTap: () {
-              _chooseIcon();
+          // Widget con 5: 2 nút Cancel và Create Category
+          CategoryActionButtons(
+            onCancel: () {
+              // TODO: Xử lý cancel
             },
-            child: Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: Color(0xFFFFFFFF).withOpacity(0.21),
-              ),
-
-              child: _iconSlected != null
-                  ? Icon(_iconSlected, color: Colors.white, size: 26)
-                  : Text(
-                      "Category Icon from library",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryChooseBackgroundColorField() {
-    return Container(
-      padding: const EdgeInsets.only(top: 10),
-      margin: EdgeInsets.only(top: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildFieldTitle("Category Color"),
-          GestureDetector(
-            // là widget bọc lại để lắng nghe sự kiện của người dùng thôi
-            onTap: () => _onChooseCategoryBackgroundColor(),
-            child: Container(
-              width: 36,
-              height: 36,
-              margin: const EdgeInsets.only(right: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(36 / 2),
-
-                color: _colorSelected ?? Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryChooseIconAndTextColorField() {
-    return Container(
-      padding: const EdgeInsets.only(top: 10),
-      margin: EdgeInsets.only(top: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildFieldTitle("Category Icon & Text Color"),
-          GestureDetector(
-            // là widget bọc lại để lắng nghe sự kiện của người dùng thôi
-            onTap: () => _onChooseCategoryIconColor(),
-            child: Container(
-              margin: const EdgeInsets.only(top: 8, right: 8),
-              width: 36,
-              height: 36,
-
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(36 / 2),
-
-                color: _iconColorSelected ?? Colors.black,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFieldTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget _buildCreateAndCancelButtons(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround, // căn 2 nút 2 bên
-        children: [
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              context.tr('common_cancel'),
-              style: TextStyle(
-                fontFamily: "Lato",
-                fontSize: 26,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          const Spacer(), // hoặc xài thằng Expanded để bọc lại các phần trong row hoặc column để chiếm hết khoản trống còn lại trong khung nhìn
-          ElevatedButton(
-            onPressed: () {
-              _handleCreateCategory();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF8875FF),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-            child: Text(
-              "Create Category",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            onCreate: _handleCreateCategory,
           ),
         ],
       ),
