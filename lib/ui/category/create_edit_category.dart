@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
 class CreateOrEditCategory extends StatefulWidget {
   const CreateOrEditCategory({super.key});
@@ -9,10 +11,11 @@ class CreateOrEditCategory extends StatefulWidget {
 }
 
 class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
-  final _nameCategoryTextController =
-      TextEditingController(); // để quản lý các text field
+  final _nameCategoryTextController = TextEditingController(); // để quản lý
   List<Color> _colorDataSource = [];
-  Color? colorSelected = null;
+  Color _colorSelected = Colors.white;
+
+  IconData? _iconSlected;
 
   @override
   void dispose() {
@@ -123,7 +126,7 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
           _buildFieldTitle("Choose Icon "),
           GestureDetector(
             onTap: () {
-              print("Hello: Choose Icon Category from library");
+              _chooseIcon();
             },
             child: Container(
               margin: const EdgeInsets.only(top: 8),
@@ -132,14 +135,17 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
                 borderRadius: BorderRadius.circular(6),
                 color: Color(0xFFFFFFFF).withOpacity(0.21),
               ),
-              child: Text(
-                "Category Icon from library",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+
+              child: _iconSlected != null
+                  ? Icon(_iconSlected, color: Colors.white, size: 26)
+                  : Text(
+                      "Category Icon from library",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
             ),
           ),
         ],
@@ -156,48 +162,62 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildFieldTitle("Category Color"),
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            width: double.infinity,
-            height: 36,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                // các biến chức năng
-                final color = _colorDataSource.elementAt(index);
-                bool isSelected = colorSelected == color;
-                return GestureDetector(
-                  onTap: () {
-                    // check
-                    print(" chooses color $index");
-                    // set state để build lại giao diện khi thay đổi nhé
-                    setState(() {
-                      colorSelected = color;
-                    });
-                  },
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    margin: const EdgeInsets.only(right: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(36 / 2),
-                      border: Border.all(
-                        width: isSelected ? 3 : 2,
-                        color: isSelected
-                            ? const Color.fromARGB(255, 255, 0, 0)
-                            : Colors.white54,
-                      ),
-                      color: color,
-                    ),
-                    child: isSelected
-                        ? const Icon(Icons.check, color: Colors.white)
-                        : null,
-                  ),
-                );
-              },
-              itemCount: _colorDataSource.length,
+          GestureDetector(
+            // là widget bọc lại để lắng nghe sự kiện của người dùng thôi
+            onTap: () => _onChooseCategoryBackgroundColor(),
+            child: Container(
+              width: 36,
+              height: 36,
+              margin: const EdgeInsets.only(right: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(36 / 2),
+
+                color: _colorSelected ?? Colors.white,
+              ),
             ),
           ),
+          // Container(
+          //   margin: const EdgeInsets.only(top: 8),
+          //   width: double.infinity,
+          //   height: 36,
+          //   child: ListView.builder(
+          //     scrollDirection: Axis.horizontal,
+          //     itemBuilder: (context, index) {
+          //       // các biến chức năng
+          //       final color = _colorDataSource.elementAt(index);
+          //       bool isSelected = colorSelected == color;
+          //       return GestureDetector(
+          //         onTap: () {
+          //           // check
+          //           print(" chooses color $index");
+          //           // set state để build lại giao diện khi thay đổi nhé
+          //           setState(() {
+          //             colorSelected = color;
+          //           });
+          //         },
+          //         child: Container(
+          //           width: 36,
+          //           height: 36,
+          //           margin: const EdgeInsets.only(right: 8),
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(36 / 2),
+          //             border: Border.all(
+          //               width: isSelected ? 3 : 2,
+          //               color: isSelected
+          //                   ? const Color.fromARGB(255, 255, 0, 0)
+          //                   : Colors.white54,
+          //             ),
+          //             color: color,
+          //           ),
+          //           child: isSelected
+          //               ? const Icon(Icons.check, color: Colors.white)
+          //               : null,
+          //         ),
+          //       );
+          //     },
+          //     itemCount: _colorDataSource.length,
+          //   ),
+          // ),
         ],
       ),
     );
@@ -261,5 +281,53 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
   void _handleCreateCategory() {
     final categoryName = _nameCategoryTextController.text;
     print("Create Category: $categoryName");
+  }
+
+  // đã thêm thư viện flutter_iconpicker: ^4.0.1 nên có thể chọn icon
+  void _chooseIcon() async {
+    IconData? icon = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackModes: [IconPack.material],
+    );
+
+    setState(() {
+      _iconSlected = icon;
+    });
+  }
+
+  // choose color của background category
+  void _onChooseCategoryBackgroundColor() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        // cách 1
+        // return AlertDialog(
+        //   content: SingleChildScrollView(
+        //     child: ColorPicker(
+        //       pickerColor: _colorSelected,
+        //       onColorChanged: (color) {
+        //         setState(() {
+        //           _colorSelected = color;
+        //         });
+        //       },
+        //     ),
+        //   ),
+        // );
+
+        // cách 2
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: MaterialPicker(
+              pickerColor: _colorSelected,
+              onColorChanged: (color) {
+                setState(() {
+                  _colorSelected = color;
+                });
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }
