@@ -1,3 +1,4 @@
+import 'package:dailyflow/ui/category/widget/preview_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
@@ -68,22 +69,25 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Widget con 1: Nhập tên category
           CategoryNameField(controller: _nameCategoryTextController),
-          // Widget con 2: Chọn icon
           CategoryIconField(selectedIcon: _iconSlected, onTap: _chooseIcon),
-          // Widget con 3: Chọn màu nền category
           CategoryBackgroundColorField(
             selectedColor: _colorSelected,
             onTap: _onChooseCategoryBackgroundColor,
           ),
-          // Widget con 4: Chọn màu icon và text
+
           CategoryIconColorField(
             selectedColor: _iconColorSelected,
             onTap: _onChooseCategoryIconColor,
           ),
+          PreviewCategory(
+            colorSelected: _colorSelected,
+            iconSelected: _iconSlected,
+            iconColorSelected: _iconColorSelected,
+            nameCategoryTextController: _nameCategoryTextController,
+          ),
           Spacer(),
-          // Widget con 5: 2 nút Cancel và Create Category
+
           CategoryActionButtons(
             onCancel: () {
               // TODO: Xử lý cancel

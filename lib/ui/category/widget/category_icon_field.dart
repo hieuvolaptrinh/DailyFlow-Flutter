@@ -1,3 +1,4 @@
+import 'package:dailyflow/ui/widget/fied_title.dart';
 import 'package:flutter/material.dart';
 
 /// Widget để chọn icon cho danh mục
@@ -24,7 +25,7 @@ class CategoryIconField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tiêu đề field
-          _buildFieldTitle("Choose Icon"),
+          FieldTitle(title: "Choose Icon"),
           // Button chọn icon
           GestureDetector(
             onTap: onTap,
@@ -49,18 +50,6 @@ class CategoryIconField extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Build tiêu đề field với styling
-  Widget _buildFieldTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:dailyflow/ui/widget/fied_title.dart';
 import 'package:flutter/material.dart';
 
 /// Widget để nhập tên danh mục
@@ -17,7 +18,7 @@ class CategoryNameField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tiêu đề field
-          _buildFieldTitle("Category Name"),
+          FieldTitle(title: "Category Name"),
           // TextFormField nhập tên
           Container(
             margin: const EdgeInsets.only(top: 8, bottom: 16),
@@ -44,18 +45,6 @@ class CategoryNameField extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Build tiêu đề field với styling
-  Widget _buildFieldTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
       ),
     );
   }

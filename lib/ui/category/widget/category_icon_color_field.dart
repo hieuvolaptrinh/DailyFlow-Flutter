@@ -1,3 +1,4 @@
+import 'package:dailyflow/ui/widget/fied_title.dart';
 import 'package:flutter/material.dart';
 
 /// Widget để chọn màu cho icon và text của danh mục
@@ -24,7 +25,7 @@ class CategoryIconColorField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tiêu đề field
-          _buildFieldTitle("Category Icon & Text Color"),
+          FieldTitle(title: "Category Icon & Text Color"),
           // Hình tròn hiển thị màu đã chọn
           GestureDetector(
             onTap: onTap,
@@ -39,18 +40,6 @@ class CategoryIconColorField extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Build tiêu đề field với styling
-  Widget _buildFieldTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
       ),
     );
   }
