@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:dailyflow/ui/login/login_page.dart';
-import 'package:dailyflow/ui/register/register_page.dart';
+import 'package:dailyflow/ui/page/login_page.dart';
+import 'package:dailyflow/ui/page/register_page.dart';
 
 class WelcomePage extends StatelessWidget {
   final bool isFirstTimeInstallApp;

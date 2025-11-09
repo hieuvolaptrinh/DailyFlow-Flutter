@@ -1,7 +1,7 @@
-import 'package:dailyflow/ui/category/create_edit_category.dart';
-import 'package:dailyflow/ui/main/main_page.dart';
-import 'package:dailyflow/ui/onboarding/onboarding_page_view.dart';
-import 'package:dailyflow/ui/welcome/welcome_page.dart';
+import 'package:dailyflow/ui/page/create_edit_category_page.dart';
+import 'package:dailyflow/ui/page/main_page.dart';
+import 'package:dailyflow/ui/page/onboarding_page_view.dart';
+import 'package:dailyflow/ui/page/welcome_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:dailyflow/ui/splash/splash.dart';
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: SafeArea(child: WelcomePage(isFirstTimeInstallApp: true)),
       // home: SafeArea(child: MainPage()),
-      home: SafeArea(child: CreateOrEditCategory()),
+      home: SafeArea(child: CreateOrEditCategoryPage()),
       // language
       localizationsDelegates: context.localizationDelegates,
       locale: context.locale,

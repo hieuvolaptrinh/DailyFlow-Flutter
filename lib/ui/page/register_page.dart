@@ -1,5 +1,5 @@
-import 'package:dailyflow/ui/login/login_page.dart';
-import 'package:dailyflow/ui/main/main_page.dart';
+import 'package:dailyflow/ui/page/login_page.dart';
+import 'package:dailyflow/ui/page/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
