@@ -1,4 +1,4 @@
-import 'package:dailyflow/ui/page/onboarding_page_view.dart';
+import 'package:dailyflow/ui/onboarding/onboarding_page_view.dart';
 import 'package:dailyflow/ui/page/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
