@@ -79,7 +79,7 @@ class OnboardingChildPage extends StatelessWidget {
             height: 4,
             width: 26,
             decoration: BoxDecoration(
-              color: OnboardingPagePosition.page1 == this.onboardingPagePosition
+              color: OnboardingPagePosition.page1 == onboardingPagePosition
                   ? Colors.white
                   : Colors.white54,
             ),
@@ -89,7 +89,7 @@ class OnboardingChildPage extends StatelessWidget {
             height: 4,
             width: 26,
             decoration: BoxDecoration(
-              color: OnboardingPagePosition.page2 == this.onboardingPagePosition
+              color: OnboardingPagePosition.page2 == onboardingPagePosition
                   ? Colors.white
                   : Colors.white54,
             ),
@@ -98,7 +98,7 @@ class OnboardingChildPage extends StatelessWidget {
             height: 4,
             width: 26,
             decoration: BoxDecoration(
-              color: OnboardingPagePosition.page3 == this.onboardingPagePosition
+              color: OnboardingPagePosition.page3 == onboardingPagePosition
                   ? Colors.white
                   : Colors.white54,
             ),
@@ -114,7 +114,7 @@ class OnboardingChildPage extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            context.tr(OnboardingPageTitle(this.onboardingPagePosition)),
+            context.tr(OnboardingPageTitle(onboardingPagePosition)),
             style: TextStyle(
               fontFamily: "Lato",
               color: Colors.white,
@@ -124,7 +124,7 @@ class OnboardingChildPage extends StatelessWidget {
           ),
           SizedBox(height: 42),
           Text(
-            context.tr(OnboardingPageContent(this.onboardingPagePosition)),
+            context.tr(OnboardingPageContent(onboardingPagePosition)),
             style: TextStyle(
               fontFamily: "Lato",
               color: Colors.white,
@@ -171,7 +171,7 @@ class OnboardingChildPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             child: Text(
-              this.onboardingPagePosition == OnboardingPagePosition.page3
+              onboardingPagePosition == OnboardingPagePosition.page3
                   ? context.tr('onboarding.get_started')
                   : context.tr('onboarding.next'),
               style: TextStyle(
