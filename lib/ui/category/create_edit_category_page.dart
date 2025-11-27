@@ -1,7 +1,10 @@
-import 'package:dailyflow/ui/category/widget/preview_category.dart';
+import 'package:dailyflow/data/model/realm/category_realm_entity.dart';
+import 'package:dailyflow/ui/category/widget/category_preview.dart';
+import 'package:dailyflow/ui/ultils/enum/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'package:realm/realm.dart';
 import 'widget/category_name_field.dart';
 import 'widget/category_icon_field.dart';
 import 'widget/category_background_color_field.dart';
@@ -23,6 +26,9 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   IconData? _iconSlected;
   Color _iconColorSelected = Colors.black;
 
+  // để kiểm tra xem realm đã được lưu hay chưa
+  final storagePath = Configuration.defaultStoragePath;
+
   @override
   void dispose() {
     _nameCategoryTextController.dispose();
@@ -32,6 +38,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   @override
   void initState() {
     super.initState();
+    print('Realm storage path: $storagePath');
   }
 
   @override
@@ -69,7 +76,12 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CategoryNameField(controller: _nameCategoryTextController),
+          CategoryNameField(
+            controller: _nameCategoryTextController,
+            onChanged: (_) {
+              setState(() {});
+            },
+          ),
           CategoryIconField(selectedIcon: _iconSlected, onTap: _chooseIcon),
           CategoryBackgroundColorField(
             selectedColor: _colorSelected,
@@ -80,7 +92,8 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
             selectedColor: _iconColorSelected,
             onTap: _onChooseCategoryIconColor,
           ),
-          PreviewCategory(
+          SizedBox(height: 20),
+          CategoryPreview(
             colorSelected: _colorSelected,
             iconSelected: _iconSlected,
             iconColorSelected: _iconColorSelected,
@@ -89,9 +102,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
           Spacer(),
 
           CategoryActionButtons(
-            onCancel: () {
-              // TODO: Xử lý cancel
-            },
+            onCancel: () {},
             onCreate: _handleCreateCategory,
           ),
         ],
@@ -101,8 +112,38 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
 
   // sự kiện, vứt ra ngoài cho dễ nhìn
   void _handleCreateCategory() {
-    final categoryName = _nameCategoryTextController.text;
-    print("Create Category: $categoryName");
+    try {
+      final categoryName = _nameCategoryTextController.text;
+
+      if (categoryName.isEmpty || _iconColorSelected == null) {
+        return;
+      }
+      var config = Configuration.local([CategoryRealmEntity.schema]);
+      var realm = Realm(config);
+
+      var category = CategoryRealmEntity(
+        ObjectId(),
+        categoryName,
+        backgroundColorHex: _colorSelected.toHex(),
+        iconColorHex: _iconColorSelected.toHex(),
+        iconCodePoint: _iconSlected?.codePoint,
+      );
+
+      //
+      realm.writeAsync(() {
+        realm.add(category);
+      });
+
+      _showAlert("Success", "Category created successfully!");
+
+      _colorSelected = Colors.white;
+      _iconSlected = null;
+      _iconColorSelected = Colors.black;
+      _nameCategoryTextController.clear();
+      setState(() {});
+    } catch (e) {
+      _showAlert("Fail", "Create Category Failed : $e");
+    }
   }
 
   // đã thêm thư viện flutter_iconpicker: ^4.0.1 nên có thể chọn icon
@@ -123,19 +164,6 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
       context: context,
       builder: (context) {
         // cách 1
-        // return AlertDialog(
-        //   content: SingleChildScrollView(
-        //     child: ColorPicker(
-        //       pickerColor: _colorSelected,
-        //       onColorChanged: (color) {
-        //         setState(() {
-        //           _colorSelected = color;
-        //         });
-        //       },
-        //     ),
-        //   ),
-        // );
-
         // cách 2
         return AlertDialog(
           content: SingleChildScrollView(
@@ -173,18 +201,26 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
         );
 
         // cách 2
-        //   return AlertDialog(
-        //     content: SingleChildScrollView(
-        //       child: MaterialPicker(
-        //         pickerColor: _iconColorSelected,
-        //         onColorChanged: (color) {
-        //           setState(() {
-        //             _iconColorSelected = color;
-        //           });
-        //         },
-        //       ),
-        //     ),
-        //   );
+      },
+    );
+  }
+
+  void _showAlert(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
       },
     );
   }

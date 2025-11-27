@@ -1,4 +1,4 @@
-import 'package:dailyflow/ui/widget/fied_title.dart';
+import 'package:dailyflow/core/widget/fied_title.dart';
 import 'package:flutter/material.dart';
 
 /// Widget để chọn màu cho icon và text của danh mục

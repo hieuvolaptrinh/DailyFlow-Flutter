@@ -1,4 +1,5 @@
 import 'package:dailyflow/ui/category/create_edit_category_page.dart';
+import 'package:dailyflow/ui/main/main_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-
   runApp(
     EasyLocalization(
       supportedLocales: [
@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.latoTextTheme(),
       ),
       // home: SafeArea(child: WelcomePage(isFirstTimeInstallApp: true)),
-      // home: SafeArea(child: MainPage()),
-      home: SafeArea(child: CreateOrEditCategoryPage()),
+      home: SafeArea(child: MainPage()),
+      // home: SafeArea(child: CreateOrEditCategoryPage()),
       // language
       localizationsDelegates: context.localizationDelegates,
       locale: context.locale,

@@ -1,3 +1,4 @@
+import 'package:dailyflow/ui/task/create_task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -124,6 +125,7 @@ class _MainPageState extends State<MainPage> {
         ),
         child: IconButton(
           onPressed: () {
+            _onShowCreateTask();
             setState(() {
               _currentPage = 2;
             });
@@ -132,6 +134,17 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  void _onShowCreateTask() {
+    // Modal bottom sheet là cái popup từ dưới nó show lên
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return CreateTaskPage();
+      },
     );
   }
 }
