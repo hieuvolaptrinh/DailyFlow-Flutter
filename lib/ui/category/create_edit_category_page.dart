@@ -1,9 +1,11 @@
 import 'package:dailyflow/data/model/realm/category_realm_entity.dart';
 import 'package:dailyflow/ui/category/widget/category_preview.dart';
 import 'package:dailyflow/core/utils/color_extension.dart';
+import 'package:dailyflow/viewmodel/category_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'package:provider/provider.dart';
 import 'package:realm/realm.dart';
 import 'widget/category_name_field.dart';
 import 'widget/category_icon_field.dart';
@@ -12,7 +14,8 @@ import 'widget/category_icon_color_field.dart';
 import 'widget/category_action_buttons.dart';
 
 class CreateOrEditCategoryPage extends StatefulWidget {
-  const CreateOrEditCategoryPage({super.key});
+  final String? categoryId;
+  const CreateOrEditCategoryPage({super.key, this.categoryId});
 
   @override
   State<CreateOrEditCategoryPage> createState() =>
@@ -21,13 +24,15 @@ class CreateOrEditCategoryPage extends StatefulWidget {
 
 class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   final _nameCategoryTextController = TextEditingController(); // để quản lý
-  Color _colorSelected = Colors.white;
-
+  Color _backgroundColorSelected = Colors.white;
   IconData? _iconSlected;
   Color _iconColorSelected = Colors.black;
-
   // để kiểm tra xem realm đã được lưu hay chưa
   final storagePath = Configuration.defaultStoragePath;
+
+  bool get isEdit {
+    return widget.categoryId != null;
+  }
 
   @override
   void dispose() {
@@ -39,6 +44,11 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   void initState() {
     super.initState();
     print('Realm storage path: $storagePath');
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (isEdit) {
+        _findCategoryById(widget.categoryId!);
+      }
+    });
   }
 
   @override
@@ -48,7 +58,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         title: Text(
-          "Create or Edit Category",
+          isEdit ? "Edit Category" : "Create Category",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -81,7 +91,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
           ),
           CategoryIconField(selectedIcon: _iconSlected, onTap: _chooseIcon),
           CategoryBackgroundColorField(
-            selectedColor: _colorSelected,
+            selectedColor: _backgroundColorSelected,
             onTap: _onChooseCategoryBackgroundColor,
           ),
 
@@ -91,7 +101,7 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
           ),
           SizedBox(height: 20),
           CategoryPreview(
-            colorSelected: _colorSelected,
+            colorSelected: _backgroundColorSelected,
             iconSelected: _iconSlected,
             iconColorSelected: _iconColorSelected,
             nameCategoryTextController: _nameCategoryTextController,
@@ -99,47 +109,79 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
           Spacer(),
 
           CategoryActionButtons(
-            onCancel: () {},
-            onCreate: _handleCreateCategory,
+            onCancel: () {
+              Navigator.pop(context);
+            },
+            onCreate: isEdit
+                ? () async {
+                    await _handleEditCategory();
+                  }
+                : _handleCreateCategory,
+            isEdit: isEdit,
           ),
         ],
       ),
     );
   }
 
-  // sự kiện, vứt ra ngoài cho dễ nhìn
-  void _handleCreateCategory() {
+  void _handleCreateCategory() async {
     try {
       final categoryName = _nameCategoryTextController.text;
 
-      if (categoryName.isEmpty || _iconColorSelected == null) {
+      if (categoryName.isEmpty) {
         return;
       }
-      var config = Configuration.local([CategoryRealmEntity.schema]);
-      var realm = Realm(config);
 
-      var category = CategoryRealmEntity(
-        ObjectId(),
+      final provider = context.read<CategoryProvider>();
+
+      final success = await provider.createCategory(
         categoryName,
-        backgroundColorHex: _colorSelected.toHex(),
-        iconColorHex: _iconColorSelected.toHex(),
-        iconCodePoint: _iconSlected?.codePoint,
+        _backgroundColorSelected.toHex(),
+        _iconColorSelected.toHex(),
+        _iconSlected?.codePoint,
       );
 
-      //
-      realm.writeAsync(() {
-        realm.add(category);
-      });
-
-      _showAlert("Success", "Category created successfully!");
-
-      _colorSelected = Colors.white;
-      _iconSlected = null;
-      _iconColorSelected = Colors.black;
-      _nameCategoryTextController.clear();
-      setState(() {});
+      if (success) {
+        await _showAlert("Success", "Category created successfully!");
+        if (context.mounted) {
+          Navigator.pop(context, true);
+        }
+      } else {
+        await _showAlert("Fail", "Create Category Failed!");
+      }
     } catch (e) {
-      _showAlert("Fail", "Create Category Failed : $e");
+      await _showAlert("Fail", "Create Category Failed: $e");
+    }
+  }
+
+  Future<void> _handleEditCategory() async {
+    try {
+      final categoryName = _nameCategoryTextController.text;
+
+      if (categoryName.isEmpty) {
+        return;
+      }
+
+      final provider = context.read<CategoryProvider>();
+
+      final success = await provider.updateCategory(
+        widget.categoryId!,
+        categoryName,
+        _backgroundColorSelected.toHex(),
+        _iconColorSelected.toHex(),
+        _iconSlected?.codePoint,
+      );
+
+      if (success) {
+        await _showAlert("Success", "Category updated successfully!");
+        if (context.mounted) {
+          Navigator.pop(context, true);
+        }
+      } else {
+        await _showAlert("Fail", "Update Failed!");
+      }
+    } catch (e) {
+      await _showAlert("Fail", "Update Category Failed: $e");
     }
   }
 
@@ -165,10 +207,10 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
         return AlertDialog(
           content: SingleChildScrollView(
             child: MaterialPicker(
-              pickerColor: _colorSelected,
+              pickerColor: _backgroundColorSelected,
               onColorChanged: (color) {
                 setState(() {
-                  _colorSelected = color;
+                  _backgroundColorSelected = color;
                 });
               },
             ),
@@ -202,8 +244,8 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
     );
   }
 
-  void _showAlert(String title, String message) {
-    showDialog(
+  Future<void> _showAlert(String title, String message) async {
+    await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -220,5 +262,33 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
         );
       },
     );
+  }
+
+  // logic lấy đữ liệu category từ realm để edit
+  void _findCategoryById(String id) {
+    final config = Configuration.local([CategoryRealmEntity.schema]);
+    final realm = Realm(config);
+
+    final category = realm.find<CategoryRealmEntity>(
+      ObjectId.fromHexString(id),
+    );
+    if (category != null) {
+      _nameCategoryTextController.text = category.name;
+      if (category.iconCodePoint != null) {
+        _iconSlected = IconData(
+          category.iconCodePoint!,
+          fontFamily: 'MaterialIcons',
+        );
+      }
+
+      if (category.backgroundColorHex != null) {
+        _backgroundColorSelected = HexColor(category.backgroundColorHex!);
+      }
+
+      if (category.iconColorHex != null) {
+        _iconColorSelected = HexColor(category.iconColorHex!);
+      }
+    }
+    setState(() {});
   }
 }

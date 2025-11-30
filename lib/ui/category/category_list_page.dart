@@ -1,12 +1,10 @@
 import 'package:dailyflow/core/utils/color_extension.dart';
 import 'package:dailyflow/data/model/category_model.dart';
-import 'package:dailyflow/data/model/realm/category_realm_entity.dart';
 import 'package:dailyflow/ui/category/create_edit_category_page.dart';
-import 'package:dailyflow/ui/category/widget/category_action_buttons.dart';
-import 'package:dailyflow/ui/category/widget/category_grid_item.dart';
 import 'package:dailyflow/ui/category/widget/category_preview.dart';
+import 'package:dailyflow/viewmodel/category_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:realm/realm.dart';
+import 'package:provider/provider.dart';
 
 class CategoryListPage extends StatefulWidget {
   const CategoryListPage({super.key});
@@ -16,7 +14,6 @@ class CategoryListPage extends StatefulWidget {
 }
 
 class _CategoryListPageState extends State<CategoryListPage> {
-  List<CategoryModel> _listCategoryDataSource = [];
   bool _isEditMode = false;
 
   @override
@@ -33,7 +30,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _getCategoryList();
+      context.read<CategoryProvider>().loadCategories();
     });
   }
 
@@ -78,57 +75,65 @@ class _CategoryListPageState extends State<CategoryListPage> {
   }
 
   Widget _buildGridCategoryList() {
-    return GridView.builder(
-      // fix cứng height width theo content
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+    return Consumer<CategoryProvider>(
+      builder: (context, categoryProvider, child) {
+        final categories = categoryProvider.categories;
 
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        // 3 cột
-        crossAxisCount: 3,
-        childAspectRatio: 1,
-      ),
-      itemBuilder: (context, index) {
-        final isLastItem = index == _listCategoryDataSource.length;
-        if (isLastItem) {
-          return _createNewCategoryButton();
-        }
-        final category = _listCategoryDataSource.elementAt(index);
-        return GestureDetector(
-          onTap: () {
-            if (_isEditMode) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateOrEditCategoryPage(),
-                ),
-              );
-            } else {
-              Navigator.pop(context, {
-                "categoryId": category.id,
-                "name": category.name,
-                "iconCodePoint": category.iconCodePoint,
-                "backgroundColorHex": category.backgroundColorHex,
-                "iconColorHex": category.iconColorHex,
-              });
-            }
-          },
-          child: CategoryPreview(
-            colorSelected: HexColor(category.backgroundColorHex ?? "#FFFFFF"),
-            iconSelected: IconData(
-              category.iconCodePoint ?? Icons.add.codePoint,
-              fontFamily: "MaterialIcons",
-            ),
-            iconColorSelected: HexColor(category.iconColorHex ?? "#FFFFFF"),
-            nameCategoryTextController: TextEditingController(
-              text: category.name,
-            ),
-            isEditMode: _isEditMode,
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 0.85,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
           ),
+          itemBuilder: (context, index) {
+            final isLastItem = index == categories.length;
+            if (isLastItem) {
+              return _createNewCategoryButton();
+            }
+            final category = categories.elementAt(index);
+            return GestureDetector(
+              onTap: () async {
+                if (_isEditMode) {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CreateOrEditCategoryPage(categoryId: category.id),
+                    ),
+                  );
+                  // Tự động reload vì Provider đã xử lý
+                } else {
+                  Navigator.pop(context, {
+                    "categoryId": category.id,
+                    "name": category.name,
+                    "iconCodePoint": category.iconCodePoint,
+                    "backgroundColorHex": category.backgroundColorHex,
+                    "iconColorHex": category.iconColorHex,
+                  });
+                }
+              },
+              child: CategoryPreview(
+                colorSelected: HexColor(
+                  category.backgroundColorHex ?? "#FFFFFF",
+                ),
+                iconSelected: IconData(
+                  category.iconCodePoint ?? Icons.add.codePoint,
+                  fontFamily: "MaterialIcons",
+                ),
+                iconColorSelected: HexColor(category.iconColorHex ?? "#FFFFFF"),
+                nameCategoryTextController: TextEditingController(
+                  text: category.name,
+                ),
+                isEditMode: _isEditMode,
+              ),
+            );
+          },
+          itemCount: categories.length + 1,
         );
       },
-      // 10 items with 3 columns
-      itemCount: _listCategoryDataSource.length + 1,
     );
   }
 
@@ -184,29 +189,6 @@ class _CategoryListPageState extends State<CategoryListPage> {
         ],
       ),
     );
-  }
-
-  // lấy từ realm như cái sql lite vậy ấy
-  Future<void> _getCategoryList() async {
-    final config = Configuration.local([CategoryRealmEntity.schema]);
-    final realm = Realm(config);
-
-    // convert categoryRealmEntity to category
-    final categories = realm.all<CategoryRealmEntity>();
-
-    List<CategoryModel> listCategory = categories.map((e) {
-      return CategoryModel(
-        id: e.id.hexString,
-        name: e.name,
-        iconCodePoint: e.iconCodePoint,
-        backgroundColorHex: e.backgroundColorHex,
-        iconColorHex: e.iconColorHex,
-      );
-    }).toList();
-
-    setState(() {
-      _listCategoryDataSource = listCategory;
-    });
   }
 
   Widget _createNewCategoryButton() {

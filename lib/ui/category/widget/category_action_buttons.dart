@@ -7,11 +7,12 @@ import 'package:flutter/material.dart';
 class CategoryActionButtons extends StatelessWidget {
   final VoidCallback onCancel;
   final VoidCallback onCreate;
-
+  final bool isEdit;
   const CategoryActionButtons({
     super.key,
     required this.onCancel,
     required this.onCreate,
+    required this.isEdit,
   });
 
   @override
@@ -45,7 +46,7 @@ class CategoryActionButtons extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             child: Text(
-              "Create Category",
+              isEdit ? "Edit Category" : "Create Category",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

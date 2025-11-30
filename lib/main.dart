@@ -1,8 +1,10 @@
 import 'package:dailyflow/ui/category/create_edit_category_page.dart';
 import 'package:dailyflow/ui/main/main_page.dart';
+import 'package:dailyflow/viewmodel/category_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,22 +26,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 88, 93, 240),
+    return ChangeNotifierProvider(
+      create: (_) => CategoryProvider(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 88, 93, 240),
+          ),
+          // fontFamily: GoogleFonts.lato().fontFamily,
+          textTheme: GoogleFonts.latoTextTheme(),
         ),
-        // fontFamily: GoogleFonts.lato().fontFamily,
-        textTheme: GoogleFonts.latoTextTheme(),
+        // home: SafeArea(child: WelcomePage(isFirstTimeInstallApp: true)),
+        home: SafeArea(child: MainPage()),
+        // home: SafeArea(child: CreateOrEditCategoryPage()),
+        // language
+        localizationsDelegates: context.localizationDelegates,
+        locale: context.locale,
+        supportedLocales: context.supportedLocales,
       ),
-      // home: SafeArea(child: WelcomePage(isFirstTimeInstallApp: true)),
-      home: SafeArea(child: MainPage()),
-      // home: SafeArea(child: CreateOrEditCategoryPage()),
-      // language
-      localizationsDelegates: context.localizationDelegates,
-      locale: context.locale,
-      supportedLocales: context.supportedLocales,
     );
   }
 }
