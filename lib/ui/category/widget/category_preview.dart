@@ -6,12 +6,15 @@ class CategoryPreview extends StatelessWidget {
   final IconData? iconSelected;
   final Color iconColorSelected;
   final TextEditingController nameCategoryTextController; // để quản lý
+
+  final bool? isEditMode;
   const CategoryPreview({
     super.key,
     required this.colorSelected,
     required this.iconSelected,
     required this.iconColorSelected,
     required this.nameCategoryTextController,
+    this.isEditMode = false,
   });
 
   @override
@@ -30,6 +33,12 @@ class CategoryPreview extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: colorSelected,
+                border: Border.all(
+                  color: isEditMode!
+                      ? const Color.fromARGB(255, 255, 149, 2)
+                      : Colors.transparent,
+                  width: isEditMode! ? 2 : 0,
+                ),
               ),
               child: Icon(iconSelected, color: iconColorSelected, size: 30),
             ),

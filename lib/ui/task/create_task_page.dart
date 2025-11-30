@@ -1,5 +1,9 @@
+import 'package:dailyflow/core/utils/color_extension.dart';
+import 'package:dailyflow/data/model/category_model.dart';
 import 'package:dailyflow/ui/category/category_list_page.dart';
 import 'package:dailyflow/core/widget/fied_title.dart';
+import 'package:dailyflow/ui/category/widget/category_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CreateTaskPage extends StatefulWidget {
@@ -11,7 +15,7 @@ class CreateTaskPage extends StatefulWidget {
 
 class _CreateTaskPageState extends State<CreateTaskPage> {
   final _textEditController = TextEditingController();
-
+  CategoryModel? _categorySelected;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,6 +35,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           children: [
             _buildTaskNameField(),
             _buildTaskDescriptionField(),
+            if (_categorySelected != null) _buildTaskCategory(),
             _buildTaskActionField(),
           ],
         ),
@@ -112,6 +117,36 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     );
   }
 
+  //
+  Widget _buildTaskCategory() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FieldTitle(title: "Task Category"),
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: CategoryPreview(
+            colorSelected: HexColor(
+              _categorySelected!.backgroundColorHex ?? "#FFFFFF",
+            ),
+            iconSelected: IconData(
+              _categorySelected!.iconCodePoint ?? Icons.add.codePoint,
+              fontFamily: "MaterialIcons",
+            ),
+            iconColorSelected: HexColor(
+              _categorySelected!.iconColorHex ?? "#FFFFFF",
+            ),
+            nameCategoryTextController: TextEditingController(
+              text: _categorySelected!.name,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  //
   Widget _buildTaskActionField() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -173,12 +208,37 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     );
   }
 
-  void _showDiaLogChooseCategory() {
-    showGeneralDialog(
+  void _showDiaLogChooseCategory() async {
+    // hứng context từ cái dialog nó trả về
+    final result = await showGeneralDialog(
       context: context,
       pageBuilder: (_, __, ___) {
         return CategoryListPage();
       },
     );
+    print(result);
+
+    if (result != null && result is Map<String, dynamic>) {
+      final categoryId = result['categoryId'] as String;
+      if (categoryId.isEmpty) {
+        return;
+      }
+      final name = result['name'] as String;
+      final iconCodePoint = result['iconCodePoint'] as int;
+      final backgroundColorHex = result['backgroundColorHex'] as String;
+      final iconColorHex = result['iconColorHex'] as String;
+
+      final category = CategoryModel(
+        id: categoryId,
+        name: name,
+        iconCodePoint: iconCodePoint,
+        backgroundColorHex: backgroundColorHex,
+        iconColorHex: iconColorHex,
+      );
+
+      setState(() {
+        _categorySelected = category;
+      });
+    }
   }
 }

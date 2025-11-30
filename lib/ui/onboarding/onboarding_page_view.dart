@@ -1,5 +1,5 @@
 import 'package:dailyflow/ui/onboarding/widget/onboarding_child_page.dart';
-import 'package:dailyflow/ui/ultils/enum/onboarding_page_postion.dart';
+import 'package:dailyflow/core/utils/enum/onboarding_page_postion.dart';
 import 'package:dailyflow/ui/page/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,4 +1,4 @@
-import 'package:dailyflow/ui/ultils/enum/onboarding_page_postion.dart';
+import 'package:dailyflow/core/utils/enum/onboarding_page_postion.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 

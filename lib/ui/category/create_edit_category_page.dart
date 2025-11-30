@@ -1,6 +1,6 @@
 import 'package:dailyflow/data/model/realm/category_realm_entity.dart';
 import 'package:dailyflow/ui/category/widget/category_preview.dart';
-import 'package:dailyflow/ui/ultils/enum/color_extension.dart';
+import 'package:dailyflow/core/utils/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
@@ -45,7 +45,6 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
-
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         title: Text(
@@ -61,8 +60,6 @@ class _CreateOrEditCategoryPageState extends State<CreateOrEditCategoryPage> {
     );
   }
 
-  /// Build body chính của trang
-  /// Cấu trúc:
   /// - CategoryNameField: Widget con để nhập tên category
   /// - CategoryIconField: Widget con để chọn icon
   /// - CategoryBackgroundColorField: Widget con để chọn màu nền

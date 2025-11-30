@@ -1,5 +1,7 @@
-import 'package:dailyflow/data/model/category.dart';
+import 'package:dailyflow/core/utils/color_extension.dart';
+import 'package:dailyflow/data/model/category_model.dart';
 import 'package:dailyflow/data/model/realm/category_realm_entity.dart';
+import 'package:dailyflow/ui/category/create_edit_category_page.dart';
 import 'package:dailyflow/ui/category/widget/category_action_buttons.dart';
 import 'package:dailyflow/ui/category/widget/category_grid_item.dart';
 import 'package:dailyflow/ui/category/widget/category_preview.dart';
@@ -14,7 +16,8 @@ class CategoryListPage extends StatefulWidget {
 }
 
 class _CategoryListPageState extends State<CategoryListPage> {
-  List<Category> _listCategoryDataSource = [];
+  List<CategoryModel> _listCategoryDataSource = [];
+  bool _isEditMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -86,39 +89,99 @@ class _CategoryListPageState extends State<CategoryListPage> {
         childAspectRatio: 1,
       ),
       itemBuilder: (context, index) {
+        final isLastItem = index == _listCategoryDataSource.length;
+        if (isLastItem) {
+          return _createNewCategoryButton();
+        }
         final category = _listCategoryDataSource.elementAt(index);
-        return CategoryPreview(
-          colorSelected: Colors.blue,
-          iconSelected: IconData(category.iconCodePoint ?? Icons.add.codePoint),
-          iconColorSelected: Colors.white,
-          nameCategoryTextController: TextEditingController(
-            text: category.name,
+        return GestureDetector(
+          onTap: () {
+            if (_isEditMode) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateOrEditCategoryPage(),
+                ),
+              );
+            } else {
+              Navigator.pop(context, {
+                "categoryId": category.id,
+                "name": category.name,
+                "iconCodePoint": category.iconCodePoint,
+                "backgroundColorHex": category.backgroundColorHex,
+                "iconColorHex": category.iconColorHex,
+              });
+            }
+          },
+          child: CategoryPreview(
+            colorSelected: HexColor(category.backgroundColorHex ?? "#FFFFFF"),
+            iconSelected: IconData(
+              category.iconCodePoint ?? Icons.add.codePoint,
+              fontFamily: "MaterialIcons",
+            ),
+            iconColorSelected: HexColor(category.iconColorHex ?? "#FFFFFF"),
+            nameCategoryTextController: TextEditingController(
+              text: category.name,
+            ),
+            isEditMode: _isEditMode,
           ),
         );
       },
       // 10 items with 3 columns
-      itemCount: _listCategoryDataSource.length,
+      itemCount: _listCategoryDataSource.length + 1,
     );
   }
 
   Widget _buildCategoryButton() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF8875FF),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        ),
-        child: Text(
-          "Add Category",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+      child: Row(
+        children: [
+          // Nút Cancel / Back
+          Expanded(
+            child: OutlinedButton(
+              onPressed: () {
+                // TODO: xử lý khi bấm Cancel
+              },
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                side: const BorderSide(color: Color(0xFF8875FF)),
+                foregroundColor: const Color(0xFF8875FF),
+              ),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
           ),
-        ),
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _isEditMode = !_isEditMode;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF8875FF),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                _isEditMode ? "Cancel Edit" : "Edit Categories",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -131,8 +194,8 @@ class _CategoryListPageState extends State<CategoryListPage> {
     // convert categoryRealmEntity to category
     final categories = realm.all<CategoryRealmEntity>();
 
-    List<Category> listCategory = categories.map((e) {
-      return Category(
+    List<CategoryModel> listCategory = categories.map((e) {
+      return CategoryModel(
         id: e.id.hexString,
         name: e.name,
         iconCodePoint: e.iconCodePoint,
@@ -144,5 +207,57 @@ class _CategoryListPageState extends State<CategoryListPage> {
     setState(() {
       _listCategoryDataSource = listCategory;
     });
+  }
+
+  Widget _createNewCategoryButton() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CreateOrEditCategoryPage(),
+          ),
+        );
+      },
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // FieldTitle(title: "Preview Category"),
+            Flexible(
+              child: Container(
+                height: 64,
+                width: 64,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: const Color.fromARGB(255, 0, 177, 3),
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: const Color.fromARGB(255, 0, 54, 6),
+                  size: 30,
+                ),
+              ),
+            ),
+            SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                "Add Category",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

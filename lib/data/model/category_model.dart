@@ -1,11 +1,11 @@
-class Category {
+class CategoryModel {
   late String id;
   late String name;
   late int? iconCodePoint;
   late String? backgroundColorHex;
   late String? iconColorHex;
 
-  Category({
+  CategoryModel({
     required this.id,
     required this.name,
     this.iconCodePoint,
