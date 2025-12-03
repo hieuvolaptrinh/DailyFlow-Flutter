@@ -6,14 +6,14 @@ import 'package:dailyflow/viewmodel/category_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class TaskPriorityListPage extends StatefulWidget {
-  const TaskPriorityListPage({super.key});
+class TaskPriorityListDialog extends StatefulWidget {
+  const TaskPriorityListDialog({super.key});
 
   @override
-  State<TaskPriorityListPage> createState() => _TaskPriorityListPageState();
+  State<TaskPriorityListDialog> createState() => _TaskPriorityListDialogState();
 }
 
-class _TaskPriorityListPageState extends State<TaskPriorityListPage> {
+class _TaskPriorityListDialogState extends State<TaskPriorityListDialog> {
   bool _isEditMode = false;
 
   @override

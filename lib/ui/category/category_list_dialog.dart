@@ -6,14 +6,14 @@ import 'package:dailyflow/viewmodel/category_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CategoryListPage extends StatefulWidget {
-  const CategoryListPage({super.key});
+class CategoryListDialog extends StatefulWidget {
+  const CategoryListDialog({super.key});
 
   @override
-  State<CategoryListPage> createState() => _CategoryListPageState();
+  State<CategoryListDialog> createState() => _CategoryListDialogState();
 }
 
-class _CategoryListPageState extends State<CategoryListPage> {
+class _CategoryListDialogState extends State<CategoryListDialog> {
   bool _isEditMode = false;
 
   @override

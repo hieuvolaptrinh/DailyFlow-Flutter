@@ -1,6 +1,6 @@
 import 'package:dailyflow/core/utils/color_extension.dart';
 import 'package:dailyflow/data/model/category_model.dart';
-import 'package:dailyflow/ui/category/category_list_page.dart';
+import 'package:dailyflow/ui/category/category_list_dialog.dart';
 import 'package:dailyflow/core/widget/fied_title.dart';
 import 'package:dailyflow/core/widget/category_preview.dart';
 import 'package:flutter/foundation.dart';
@@ -246,7 +246,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     final result = await showGeneralDialog(
       context: context,
       pageBuilder: (_, __, ___) {
-        return CategoryListPage();
+        return CategoryListDialog();
       },
     );
     print(result);
