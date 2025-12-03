@@ -3,8 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:dailyflow/routes/routes.dart';
 
 class WelcomePage extends StatelessWidget {
-  final bool isFirstTimeInstallApp;
-  const WelcomePage({super.key, required this.isFirstTimeInstallApp});
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

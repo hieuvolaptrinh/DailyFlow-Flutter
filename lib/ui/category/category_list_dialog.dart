@@ -144,7 +144,7 @@ class _CategoryListDialogState extends State<CategoryListDialog> {
           Expanded(
             child: OutlinedButton(
               onPressed: () {
-                // TODO: xử lý khi bấm Cancel
+                Navigator.pop(context);
               },
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),

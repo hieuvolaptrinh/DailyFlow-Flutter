@@ -3,6 +3,7 @@ import 'package:dailyflow/data/model/category_model.dart';
 import 'package:dailyflow/ui/category/category_list_dialog.dart';
 import 'package:dailyflow/core/widget/fied_title.dart';
 import 'package:dailyflow/core/widget/category_preview.dart';
+import 'package:dailyflow/ui/task_priority/task_priority_list_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +19,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   final _textEditController = TextEditingController();
   CategoryModel? _categorySelected;
   DateTime? _taskDateSelected;
-
+  int? _taskPrioritySelected;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -215,7 +216,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
               // Cờ ưu tiên
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  _showDiaLogChoosePriority();
+                },
                 icon: Icon(
                   Icons.flag,
                   size: 24,
@@ -239,6 +242,25 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         ),
       ],
     );
+  }
+
+  void _showDiaLogChoosePriority() async {
+    // hứng context từ cái dialog nó trả về
+    final result = await showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) {
+        return TaskPriorityListDialog();
+      },
+    );
+
+    print(result);
+
+    if (result != null && result is Map<String, dynamic>) {
+      final priority = result['priority'] as int;
+      setState(() {
+        _taskPrioritySelected = priority;
+      });
+    }
   }
 
   void _showDiaLogChooseCategory() async {

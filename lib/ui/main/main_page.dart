@@ -1,6 +1,8 @@
 import 'package:dailyflow/ui/task/create_task_page.dart';
+import 'package:dailyflow/viewmodel/category_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -24,6 +26,11 @@ class _MainPageState extends State<MainPage> {
       Container(color: Colors.blue),
       Container(color: Colors.yellow),
     ];
+
+    // Load categories khi vào MainPage
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CategoryProvider>().loadCategories();
+    });
   }
 
   @override

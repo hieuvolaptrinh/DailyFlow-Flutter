@@ -9,7 +9,7 @@ import 'package:dailyflow/ui/main/main_page.dart';
 import 'package:dailyflow/ui/task/create_task_page.dart';
 import 'package:dailyflow/ui/category/category_list_dialog.dart';
 import 'package:dailyflow/ui/category/create_edit_category_page.dart';
-import 'package:dailyflow/ui/task_priority/task-priority_list_dialog.dart';
+import 'package:dailyflow/ui/task_priority/task_priority_list_dialog.dart';
 
 class AppRouter {
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -27,13 +27,8 @@ class AppRouter {
         );
 
       case Routes.welcome:
-        // Truyền argument nếu cần
-        final args = settings.arguments as Map<String, dynamic>?;
-        final isFirstTimeInstallApp =
-            args?['isFirstTimeInstallApp'] as bool? ?? false;
         return MaterialPageRoute(
-          builder: (_) =>
-              WelcomePage(isFirstTimeInstallApp: isFirstTimeInstallApp),
+          builder: (_) => const WelcomePage(),
           settings: settings,
         );
 
