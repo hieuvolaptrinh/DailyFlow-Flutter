@@ -1,5 +1,4 @@
-import 'package:dailyflow/ui/onboarding/onboarding_page_view.dart';
-import 'package:dailyflow/ui/page/welcome_page.dart';
+import 'package:dailyflow/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -10,24 +9,14 @@ class SplashScreen extends StatelessWidget {
   Future<void> _checkAppState(BuildContext context) async {
     final isCompleted = await _isOnboardingCompleted();
     if (isCompleted) {
-      // di chuyển đến màn hình welcom
-      Navigator.pushReplacement(
+      // di chuyển đến màn hình welcome
+      Navigator.pushReplacementNamed(
         context,
-        MaterialPageRoute(
-          builder: (context) {
-            return WelcomePage(isFirstTimeInstallApp: false);
-          },
-        ),
+        Routes.welcome,
+        arguments: {'isFirstTimeInstallApp': false},
       );
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return OnboardingPageView();
-          },
-        ),
-      );
+      Navigator.pushReplacementNamed(context, Routes.onboarding);
     }
   }
 

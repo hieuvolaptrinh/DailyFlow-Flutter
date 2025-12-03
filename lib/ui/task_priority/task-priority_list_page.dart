@@ -6,14 +6,14 @@ import 'package:dailyflow/viewmodel/category_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CategoryListPage extends StatefulWidget {
-  const CategoryListPage({super.key});
+class TaskPriorityListPage extends StatefulWidget {
+  const TaskPriorityListPage({super.key});
 
   @override
-  State<CategoryListPage> createState() => _CategoryListPageState();
+  State<TaskPriorityListPage> createState() => _TaskPriorityListPageState();
 }
 
-class _CategoryListPageState extends State<CategoryListPage> {
+class _TaskPriorityListPageState extends State<TaskPriorityListPage> {
   bool _isEditMode = false;
 
   @override
@@ -29,9 +29,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<CategoryProvider>().loadCategories();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
   }
 
   Widget _buildBodyPage() {

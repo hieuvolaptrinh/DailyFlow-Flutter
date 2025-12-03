@@ -2,9 +2,10 @@ import 'package:dailyflow/core/utils/color_extension.dart';
 import 'package:dailyflow/data/model/category_model.dart';
 import 'package:dailyflow/ui/category/category_list_page.dart';
 import 'package:dailyflow/core/widget/fied_title.dart';
-import 'package:dailyflow/ui/category/widget/category_preview.dart';
+import 'package:dailyflow/core/widget/category_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CreateTaskPage extends StatefulWidget {
   const CreateTaskPage({super.key});
@@ -16,6 +17,8 @@ class CreateTaskPage extends StatefulWidget {
 class _CreateTaskPageState extends State<CreateTaskPage> {
   final _textEditController = TextEditingController();
   CategoryModel? _categorySelected;
+  DateTime? _taskDateSelected;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,6 +38,12 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           children: [
             _buildTaskNameField(),
             _buildTaskDescriptionField(),
+            _taskDateSelected != null
+                ? _buildTaskDateTime()
+                : Text(
+                    "Please select date and time",
+                    style: TextStyle(color: Colors.white54),
+                  ),
             if (_categorySelected != null) _buildTaskCategory(),
             _buildTaskActionField(),
           ],
@@ -118,6 +127,28 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   }
 
   //
+  Widget _buildTaskDateTime() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          "Task time",
+          style: TextStyle(fontSize: 18, color: const Color(0xFFAFAFAF)),
+        ),
+        Container(
+          margin: const EdgeInsets.only(left: 10),
+          child: Text(
+            DateFormat('dd-MM-yyyy HH:mm').format(_taskDateSelected!),
+
+            style: TextStyle(fontSize: 18, color: const Color(0xFFAFAFAF)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  //
   Widget _buildTaskCategory() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -156,7 +187,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             children: [
               // Hẹn giờ
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  _selectTaskTime();
+                },
                 icon: Icon(
                   Icons.timer,
                   size: 24,
@@ -240,5 +273,63 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         _categorySelected = category;
       });
     }
+  }
+
+  void _selectTaskTime() async {
+    // nếu muốn chọn cả giờ thì dùng showTimePicker
+
+    final date = await showDatePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Color(0xFF8687E7),
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (date != null) {
+      return null;
+    }
+
+    if (!context.mounted) {
+      return;
+    }
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Color(0xFF8687E7),
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (time == null) return;
+
+    // kết hợp ngày và giờ lại với nhau
+
+    final dateTimeSelected = date?.copyWith(
+      hour: time.hour,
+      minute: time.minute,
+      second: 0,
+    );
+
+    setState(() {
+      _taskDateSelected = dateTimeSelected;
+    });
   }
 }

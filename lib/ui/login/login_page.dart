@@ -1,5 +1,4 @@
-import 'package:dailyflow/ui/register/register_page.dart';
-import 'package:dailyflow/ui/main/main_page.dart';
+import 'package:dailyflow/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -152,12 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Navigate to Main Page
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainPage(),
-                        ),
-                      );
+                      Navigator.pushReplacementNamed(context, Routes.main);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF8687E7),
@@ -244,12 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterPage(),
-                        ),
-                      );
+                      Navigator.pushNamed(context, Routes.register);
                     },
                     child: RichText(
                       text: TextSpan(

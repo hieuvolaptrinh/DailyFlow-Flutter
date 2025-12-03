@@ -1,3 +1,5 @@
+import 'package:dailyflow/routes/routes.dart';
+import 'package:dailyflow/routes/app-router.dart';
 import 'package:dailyflow/ui/category/create_edit_category_page.dart';
 import 'package:dailyflow/ui/main/main_page.dart';
 import 'package:dailyflow/viewmodel/category_provider.dart';
@@ -38,12 +40,15 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.latoTextTheme(),
         ),
         // home: SafeArea(child: WelcomePage(isFirstTimeInstallApp: true)),
-        home: SafeArea(child: MainPage()),
+        // home: SafeArea(child: MainPage()),
         // home: SafeArea(child: CreateOrEditCategoryPage()),
         // language
         localizationsDelegates: context.localizationDelegates,
         locale: context.locale,
         supportedLocales: context.supportedLocales,
+
+        initialRoute: Routes.main,
+        onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
   }

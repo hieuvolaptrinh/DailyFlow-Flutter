@@ -28,6 +28,8 @@ dependencies:
   flutter_iconpicker: 3.2.4
   flutter_colorpicker: ^1.1.0
   provider: ^6.1.2
+  # thư viện chuẩn quốc tế định dạng ngày giờ, tiền tệ ,....
+  intl: any
 
 dev_dependencies:
   flutter_test:

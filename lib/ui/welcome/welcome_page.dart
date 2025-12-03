@@ -1,8 +1,6 @@
-import 'package:dailyflow/ui/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-
-import 'package:dailyflow/ui/register/register_page.dart';
+import 'package:dailyflow/routes/routes.dart';
 
 class WelcomePage extends StatelessWidget {
   final bool isFirstTimeInstallApp;
@@ -77,10 +75,7 @@ class WelcomePage extends StatelessWidget {
   Widget _buttonCreateAccount(BuildContext context) {
     return OutlinedButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const RegisterPage()),
-        );
+        Navigator.pushNamed(context, Routes.register);
       },
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 56),
@@ -102,10 +97,7 @@ class WelcomePage extends StatelessWidget {
   Widget _buttonLogin(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        Navigator.pushNamed(context, Routes.login);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0XFF8687E7),

@@ -1,5 +1,5 @@
 import 'package:dailyflow/data/model/realm/category_realm_entity.dart';
-import 'package:dailyflow/ui/category/widget/category_preview.dart';
+import 'package:dailyflow/core/widget/category_preview.dart';
 import 'package:dailyflow/core/utils/color_extension.dart';
 import 'package:dailyflow/viewmodel/category_provider.dart';
 import 'package:flutter/material.dart';
