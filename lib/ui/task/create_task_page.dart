@@ -2,9 +2,7 @@ import 'package:dailyflow/core/utils/color_extension.dart';
 import 'package:dailyflow/data/model/category_model.dart';
 import 'package:dailyflow/ui/category/category_list_dialog.dart';
 import 'package:dailyflow/core/widget/fied_title.dart';
-import 'package:dailyflow/core/widget/category_preview.dart';
 import 'package:dailyflow/ui/task_priority/task_priority_list_dialog.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -32,22 +30,24 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     return Form(
       child: Container(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTaskNameField(),
-            _buildTaskDescriptionField(),
-            _taskDateSelected != null
-                ? _buildTaskDateTime()
-                : Text(
-                    "Please select date and time",
-                    style: TextStyle(color: Colors.white54),
-                  ),
-            if (_categorySelected != null) _buildTaskCategory(),
-            _buildTaskActionField(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTaskNameField(),
+              SizedBox(height: 16),
+              _buildTaskDescriptionField(),
+              SizedBox(height: 16),
+              _buildTaskActionField(),
+              SizedBox(height: 16),
+              // Preview các thông tin đã chọn
+              if (_taskDateSelected != null) _buildTaskDateTime(),
+              if (_categorySelected != null) _buildTaskCategory(),
+              if (_taskPrioritySelected != null) _buildTaskPriority(),
+            ],
+          ),
         ),
       ),
     );
@@ -127,54 +127,79 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     );
   }
 
-  //
   Widget _buildTaskDateTime() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          "Task time",
-          style: TextStyle(fontSize: 18, color: const Color(0xFFAFAFAF)),
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 10),
-          child: Text(
-            DateFormat('dd-MM-yyyy HH:mm').format(_taskDateSelected!),
-
-            style: TextStyle(fontSize: 18, color: const Color(0xFFAFAFAF)),
+    return Container(
+      margin: const EdgeInsets.only(top: 12, bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2C2C2C),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF8687E7), width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.calendar_today, color: Colors.orangeAccent, size: 20),
+              SizedBox(width: 10),
+              Text(
+                DateFormat('dd MMM yyyy, HH:mm').format(_taskDateSelected!),
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ],
           ),
-        ),
-      ],
+          Icon(Icons.check_circle, color: Colors.greenAccent, size: 20),
+        ],
+      ),
     );
   }
 
-  //
   Widget _buildTaskCategory() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FieldTitle(title: "Task Category"),
-        Container(
-          margin: const EdgeInsets.only(top: 10),
-          child: CategoryPreview(
-            colorSelected: HexColor(
-              _categorySelected!.backgroundColorHex ?? "#FFFFFF",
-            ),
-            iconSelected: IconData(
-              _categorySelected!.iconCodePoint ?? Icons.add.codePoint,
-              fontFamily: "MaterialIcons",
-            ),
-            iconColorSelected: HexColor(
-              _categorySelected!.iconColorHex ?? "#FFFFFF",
-            ),
-            nameCategoryTextController: TextEditingController(
-              text: _categorySelected!.name,
-            ),
+    return Container(
+      margin: const EdgeInsets.only(top: 12, bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2C2C2C),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF8687E7), width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.tag, color: Colors.blueAccent, size: 20),
+              SizedBox(width: 10),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: HexColor(
+                    _categorySelected!.backgroundColorHex ?? "#FFFFFF",
+                  ),
+                ),
+                child: Icon(
+                  IconData(
+                    _categorySelected!.iconCodePoint ?? Icons.add.codePoint,
+                    fontFamily: "MaterialIcons",
+                  ),
+                  color: HexColor(_categorySelected!.iconColorHex ?? "#FFFFFF"),
+                  size: 18,
+                ),
+              ),
+              SizedBox(width: 10),
+              Text(
+                _categorySelected!.name,
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ],
           ),
-        ),
-      ],
+          Icon(Icons.check_circle, color: Colors.greenAccent, size: 20),
+        ],
+      ),
     );
   }
 
@@ -298,8 +323,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   }
 
   void _selectTaskTime() async {
-    // nếu muốn chọn cả giờ thì dùng showTimePicker
-
     final date = await showDatePicker(
       context: context,
       firstDate: DateTime.now(),
@@ -317,13 +340,14 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       },
     );
 
-    if (date != null) {
-      return null;
+    if (date == null) {
+      return;
     }
 
     if (!context.mounted) {
       return;
     }
+
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -342,9 +366,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
     if (time == null) return;
 
-    // kết hợp ngày và giờ lại với nhau
-
-    final dateTimeSelected = date?.copyWith(
+    final dateTimeSelected = date.copyWith(
       hour: time.hour,
       minute: time.minute,
       second: 0,
@@ -353,5 +375,58 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     setState(() {
       _taskDateSelected = dateTimeSelected;
     });
+  }
+
+  Widget _buildTaskPriority() {
+    String priorityLabel = '';
+    Color priorityColor = Colors.white;
+
+    switch (_taskPrioritySelected) {
+      case 1:
+        priorityLabel = 'Low Priority';
+        priorityColor = Colors.greenAccent;
+        break;
+      case 2:
+        priorityLabel = 'Medium Priority';
+        priorityColor = Colors.orangeAccent;
+        break;
+      case 3:
+        priorityLabel = 'High Priority';
+        priorityColor = Colors.redAccent;
+        break;
+      default:
+        priorityLabel = 'Not Set';
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 12, bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2C2C2C),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF8687E7), width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.flag, color: Colors.redAccent, size: 20),
+              SizedBox(width: 10),
+              Text(
+                priorityLabel,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: priorityColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          Icon(Icons.check_circle, color: Colors.greenAccent, size: 20),
+        ],
+      ),
+    );
   }
 }

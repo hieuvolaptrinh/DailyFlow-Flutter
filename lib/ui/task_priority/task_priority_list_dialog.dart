@@ -166,8 +166,8 @@ class _TaskPriorityListDialogState extends State<TaskPriorityListDialog> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
-                "Edit",
+              child: Text(
+                _selectPriority == null ? "Select Priority" : "Confirm",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
