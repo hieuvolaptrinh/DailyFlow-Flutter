@@ -1,38 +1,12 @@
-import 'package:dailyflow/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  Future<void> _checkAppState(BuildContext context) async {
-    final isCompleted = await _isOnboardingCompleted();
-    if (isCompleted) {
-      // di chuyển đến màn hình welcome
-      Navigator.pushReplacementNamed(
-        context,
-        Routes.welcome,
-        arguments: {'isFirstTimeInstallApp': false},
-      );
-    } else {
-      Navigator.pushReplacementNamed(context, Routes.onboarding);
-    }
-  }
-
-  Future<bool> _isOnboardingCompleted() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final result = prefs.getBool("kOnboardingCompleted") ?? false;
-      return result;
-    } catch (e) {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    _checkAppState(context);
+    // Không cần navigation vì initialRoute đã là Routes.main
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFF121212),

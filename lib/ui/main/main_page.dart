@@ -131,12 +131,7 @@ class _MainPageState extends State<MainPage> {
           borderRadius: BorderRadius.circular(32),
         ),
         child: IconButton(
-          onPressed: () {
-            _onShowCreateTask();
-            setState(() {
-              _currentPage = 2;
-            });
-          },
+          onPressed: _onShowCreateTask,
           icon: Icon(Icons.add, size: 30, color: Colors.white),
         ),
       ),
@@ -149,8 +144,14 @@ class _MainPageState extends State<MainPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return CreateTaskPage();
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: const CreateTaskPage(),
+        );
       },
     );
   }

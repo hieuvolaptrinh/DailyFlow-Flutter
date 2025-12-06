@@ -2,7 +2,6 @@ import 'package:dailyflow/ui/onboarding/widget/onboarding_child_page.dart';
 import 'package:dailyflow/core/utils/enum/onboarding_page_postion.dart';
 import 'package:dailyflow/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingPageView extends StatefulWidget {
   const OnboardingPageView({super.key});
@@ -65,19 +64,10 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
   }
 
   void _goToWelcomPage() {
-    Navigator.pushNamed(
-      context,
-      Routes.welcome,
-      arguments: {'isFirstTimeInstallApp': true},
-    );
+    Navigator.pushReplacementNamed(context, Routes.main);
   }
 
-  Future<void> _markOnboardingComplete() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool("kOnboardingCompleted", true);
-    } catch (e) {
-      return;
-    }
+  void _markOnboardingComplete() {
+    // Không cần logic kiểm tra lần đầu nữa
   }
 }
