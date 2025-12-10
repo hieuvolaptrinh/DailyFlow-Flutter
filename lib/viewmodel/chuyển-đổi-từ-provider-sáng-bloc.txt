@@ -1,0 +1,3 @@
+# Tổ hợp phím tạo bloc Cubit nhanh khi có extension 
+Bloc: New Bloc → tạo Bloc mới
+Cubit: New Cubit → tạo Cubit mới 

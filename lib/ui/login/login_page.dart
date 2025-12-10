@@ -1,16 +1,30 @@
 import 'package:dailyflow/core/widget/auth_input.dart';
 import 'package:dailyflow/routes/routes.dart';
+import 'package:dailyflow/viewmodel/cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider<LoginCubit>(
+      create: (context) => LoginCubit(),
+      child: LoginView(),
+    );
+  }
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -25,32 +39,67 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          height: double.infinity,
-          decoration: _buildBackgroundGradient(),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildBackButton(context),
-                  const SizedBox(height: 40),
-                  _buildHeader(context),
-                  const SizedBox(height: 40),
-                  _buildFormLogin(),
-                  const SizedBox(height: 28),
-                  _buildOrDivider(context),
-                  const SizedBox(height: 20),
-                  _buildGoogleLoginButton(context),
-                  const SizedBox(height: 14),
-                  _buildAppleLoginButton(context),
-                  const SizedBox(height: 28),
-                  _buildRegisterLink(context),
-                  const SizedBox(height: 20),
-                ],
+    return BlocListener<LoginCubit, LoginState>(
+      listener: (context, state) {
+        // Lắng nghe các state changes và xử lý UI
+        if (state.status == LoginStatus.success) {
+          // Hiển thị thông báo thành công
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message ?? 'Login successful!'),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          );
+          // Navigate đến màn hình chính
+          Navigator.pushReplacementNamed(context, Routes.main);
+        } else if (state.status == LoginStatus.failure) {
+          // Hiển thị thông báo lỗi
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message ?? 'An error occurred'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          );
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            height: double.infinity,
+            decoration: _buildBackgroundGradient(),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildBackButton(context),
+                    const SizedBox(height: 40),
+                    _buildHeader(context),
+                    const SizedBox(height: 40),
+                    _buildFormLogin(),
+                    const SizedBox(height: 28),
+                    _buildOrDivider(context),
+                    const SizedBox(height: 20),
+                    _buildGoogleLoginButton(context),
+                    const SizedBox(height: 14),
+                    _buildAppleLoginButton(context),
+                    const SizedBox(height: 28),
+                    _buildRegisterLink(context),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
           ),
@@ -128,48 +177,60 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildLoginButton(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF8687E7), Color(0xFF9F7AEA)],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF8687E7).withOpacity(0.4),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: () {
-          _onHandleLoginSubmit();
-          // Navigator.pushReplacementNamed(context, Routes.main);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
+    return BlocBuilder<LoginCubit, LoginState>(
+      builder: (context, state) {
+        // Kiểm tra xem có đang loading không
+        final isLoading = state.status == LoginStatus.loading;
+
+        return Container(
+          width: double.infinity,
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF8687E7), Color(0xFF9F7AEA)],
+            ),
             borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF8687E7).withOpacity(0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
-        ),
-        child: Text(
-          context.tr('login_page.login_button'),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 17,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
+          child: ElevatedButton(
+            onPressed: isLoading ? null : _onHandleLoginSubmit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: isLoading
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text(
+                    context.tr('login_page.login_button'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  // Background gradient decoration
   BoxDecoration _buildBackgroundGradient() {
     return BoxDecoration(
       gradient: LinearGradient(
@@ -270,7 +331,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Apple login button
   Widget _buildAppleLoginButton(BuildContext context) {
     return Container(
       width: double.infinity,
@@ -339,11 +399,12 @@ class _LoginPageState extends State<LoginPage> {
   void _onHandleLoginSubmit() {
     final isValid = _formKey.currentState?.validate() ?? false;
     if (isValid) {
-      // login các kiểu
-      // Xử lý đăng nhập ở đây
-      Navigator.pushReplacementNamed(context, Routes.main);
-    } else {
-      ///...
+      final loginCubit = BlocProvider.of<LoginCubit>(context, listen: false);
+      final email = _usernameController.text.trim();
+      final password = _passwordController.text.trim();
+
+      // Gọi hàm login từ cubit
+      loginCubit.login(email, password);
     }
   }
 }
