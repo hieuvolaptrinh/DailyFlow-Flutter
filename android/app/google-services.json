@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "574104392868",
+    "project_id": "dailyflow-80882",
+    "storage_bucket": "dailyflow-80882.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574104392868:android:3832f1d0132ccc8a13c231",
+        "android_client_info": {
+          "package_name": "com.example.flutte_restapi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABY7qqEFPp2EULvWJtzq7zfYncLWFl2Z4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
