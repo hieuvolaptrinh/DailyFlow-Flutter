@@ -226,7 +226,7 @@ lib/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/dailyflow.git
+   git clone https://github.com/hieuvolaptrinh/dailyflow.git
    cd dailyflow
    ```
 
