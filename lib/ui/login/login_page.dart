@@ -1,4 +1,5 @@
 import 'package:dailyflow/core/widget/auth_input.dart';
+import 'package:dailyflow/data/repository/authenticate_repository.dart';
 import 'package:dailyflow/routes/routes.dart';
 import 'package:dailyflow/viewmodel/cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
@@ -11,20 +12,22 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LoginCubit>(
-      create: (context) => LoginCubit(),
-      child: LoginView(),
+      create: (context) => LoginCubit(
+        authenticateRepository: context.read<AuthenticateRepository>(),
+      ),
+      child: View(),
     );
   }
 }
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class View extends StatefulWidget {
+  const View({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<View> createState() => _ViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _ViewState extends State<View> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -46,7 +49,7 @@ class _LoginViewState extends State<LoginView> {
           // Hiển thị thông báo thành công
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message ?? 'Login successful!'),
+              content: Text(state.message ?? ' successful!'),
               backgroundColor: Colors.green,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -88,13 +91,13 @@ class _LoginViewState extends State<LoginView> {
                     const SizedBox(height: 40),
                     _buildHeader(context),
                     const SizedBox(height: 40),
-                    _buildFormLogin(),
+                    _buildForm(),
                     const SizedBox(height: 28),
                     _buildOrDivider(context),
                     const SizedBox(height: 20),
-                    _buildGoogleLoginButton(context),
+                    _buildGoogleButton(context),
                     const SizedBox(height: 14),
-                    _buildAppleLoginButton(context),
+                    _buildAppleButton(context),
                     const SizedBox(height: 28),
                     _buildRegisterLink(context),
                     const SizedBox(height: 20),
@@ -108,7 +111,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget _buildFormLogin() {
+  Widget _buildForm() {
     // bọc form ở ngoài để validate dữ liệu
     return Form(
       key: _formKey,
@@ -119,7 +122,7 @@ class _LoginViewState extends State<LoginView> {
             const SizedBox(height: 24),
             _buildPasswordField(context),
             const SizedBox(height: 36),
-            _buildLoginButton(context),
+            _buildButton(context),
           ],
         ),
       ),
@@ -129,8 +132,8 @@ class _LoginViewState extends State<LoginView> {
   Widget _buildUsernameField(BuildContext context) {
     return AuthInput(
       controller: _usernameController,
-      hintText: context.tr('login_page.username_hint'),
-      labelText: context.tr('login_page.username'),
+      hintText: context.tr('_page.username_hint'),
+      labelText: context.tr('_page.username'),
       prefixIcon: Icons.person_outline,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -147,8 +150,8 @@ class _LoginViewState extends State<LoginView> {
   Widget _buildPasswordField(BuildContext context) {
     return AuthInput(
       controller: _passwordController,
-      hintText: context.tr('login_page.password_hint'),
-      labelText: context.tr('login_page.password'),
+      hintText: context.tr('_page.password_hint'),
+      labelText: context.tr('_page.password'),
       prefixIcon: Icons.lock_outline,
       obscureText: _obscurePassword,
       suffixIcon: IconButton(
@@ -176,7 +179,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget _buildLoginButton(BuildContext context) {
+  Widget _buildButton(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       builder: (context, state) {
         // Kiểm tra xem có đang loading không
@@ -199,7 +202,7 @@ class _LoginViewState extends State<LoginView> {
             ],
           ),
           child: ElevatedButton(
-            onPressed: isLoading ? null : _onHandleLoginSubmit,
+            onPressed: isLoading ? null : _onHandleSubmit,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
@@ -217,7 +220,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   )
                 : Text(
-                    context.tr('login_page.login_button'),
+                    context.tr('_page._button'),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 17,
@@ -268,7 +271,7 @@ class _LoginViewState extends State<LoginView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          context.tr('login_page.title'),
+          context.tr('_page.title'),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 36,
@@ -292,7 +295,7 @@ class _LoginViewState extends State<LoginView> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
-            context.tr('login_page.or'),
+            context.tr('_page.or'),
             style: const TextStyle(color: Colors.white54),
           ),
         ),
@@ -301,7 +304,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget _buildGoogleLoginButton(BuildContext context) {
+  Widget _buildGoogleButton(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 56,
@@ -311,10 +314,10 @@ class _LoginViewState extends State<LoginView> {
         border: Border.all(color: const Color(0xFF3C3C3C), width: 1.5),
       ),
       child: OutlinedButton.icon(
-        onPressed: () {},
+        onPressed: _onHandleGoogle,
         icon: Image.asset('assets/images/google.png', width: 24, height: 24),
         label: Text(
-          context.tr('login_page.login_google'),
+          context.tr('_page._google'),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -331,7 +334,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget _buildAppleLoginButton(BuildContext context) {
+  Widget _buildAppleButton(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 56,
@@ -344,7 +347,7 @@ class _LoginViewState extends State<LoginView> {
         onPressed: () {},
         icon: Image.asset('assets/images/apple.png', width: 24, height: 24),
         label: Text(
-          context.tr('login_page.login_apple'),
+          context.tr('_page._apple'),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -372,15 +375,14 @@ class _LoginViewState extends State<LoginView> {
           text: TextSpan(
             children: [
               TextSpan(
-                text:
-                    "${context.tr('login_page.register_link').split('?')[0]}? ",
+                text: "${context.tr('_page.register_link').split('?')[0]}? ",
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.7),
                   fontSize: 15,
                 ),
               ),
               TextSpan(
-                text: context.tr('login_page.register_link').split('?')[1],
+                text: context.tr('_page.register_link').split('?')[1],
                 style: const TextStyle(
                   color: Color(0xFF8687E7),
                   fontSize: 15,
@@ -396,7 +398,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   // event
-  void _onHandleLoginSubmit() {
+  void _onHandleSubmit() {
     final isValid = _formKey.currentState?.validate() ?? false;
     if (isValid) {
       final loginCubit = BlocProvider.of<LoginCubit>(context, listen: false);
@@ -406,5 +408,11 @@ class _LoginViewState extends State<LoginView> {
       // Gọi hàm login từ cubit
       loginCubit.login(email, password);
     }
+  }
+
+  void _onHandleGoogle() {
+    final loginCubit = BlocProvider.of<LoginCubit>(context, listen: false);
+    // Google sign-in không cần email/password từ form
+    loginCubit.loginWithGoogle();
   }
 }
